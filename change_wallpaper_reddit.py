@@ -40,4 +40,4 @@ if response.status_code == 200:
             fo.write(chunk)
 
     # Execute command to change wallpaper
-    os.system("gsettings set org.gnome.desktop.background picture-uri file:///home/" + homedir.rsplit("/",1)[1] + "/Pictures/Wallpapers/" + saveFileName)
+    os.system("gsettings set org.gnome.desktop.background picture-uri file://" + homedir + "/Pictures/Wallpapers/" + saveFileName)
