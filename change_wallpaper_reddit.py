@@ -33,6 +33,11 @@ if response.status_code == 200:
     homedir = os.path.expanduser('~')
     saveLocation = homedir + "/Pictures/Wallpapers/wallpaper.jpg"
 
+    # Create folders if they don't exist
+    dir = os.path.dirname(saveLocation)
+    if not os.path.exists(dir):
+        os.makedirs(dir)
+        
     # Write to disk
     with open(saveLocation, 'wb') as fo:
         for chunk in response.iter_content(4096):
