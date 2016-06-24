@@ -1,4 +1,4 @@
-# Change Ubunt Wallpaper (on startup)
+# Change Ubuntu Wallpaper (on startup)
 This script changes your wallpaper to most upvoted image of the day on /r/wallpapers or from any other subreddit.
 
 
