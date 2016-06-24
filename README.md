@@ -27,14 +27,20 @@ Using script
 
 Simply run:
 ```
-python /home/silvio/Scripts/change_wallpaper_reddit.py
+python /home/silvio/Scripts/change_wallpaper_reddit.py 
 ```
 
 If you wanna use other subreddit, include argument with the subreddit name:
 ```
-python /home/silvio/Scripts/change_wallpaper_reddit.py earthporn
+python /home/silvio/Scripts/change_wallpaper_reddit.py --subreddit earthporn
 ```
 
+If you don't want to change your wallpaper daily, you can use top weekly, monthly or yearly wallpaper too by adding argument ```week``` or ```month``` or ```year``` to the script.
+
+Example:
+```
+python /home/silvio/Scripts/change_wallpaper_reddit.py --time week 
+```
 
 Running on startup
 =======
