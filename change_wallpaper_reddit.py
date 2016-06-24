@@ -7,7 +7,7 @@ import sys
 
 # Get image link of most upvoted wallpaper of the day
 def get_top_image(subreddit):
-    for submission in subreddit.get_top_from_day(limit=10):
+    for submission in subreddit.get_top_from_day(params={'t': sys.argv[2] if len(sys.argv) > 2 else 'day'}, limit=25):
         url = submission.url
         if url.endswith(".jpg"):
             return url
@@ -21,7 +21,7 @@ def get_top_image(subreddit):
 
 # Python Reddit Api Wrapper
 r = praw.Reddit(user_agent="Get top wallpaper from /r/wallpers by /u/ssimunic")
-subreddit = sys.argv[1] if len(sys.argv) > 1 else "art"
+subreddit = sys.argv[1] if len(sys.argv) > 1 else "wallpapers"
 
 # Get top image path
 imageUrl = get_top_image(r.get_subreddit(subreddit))
