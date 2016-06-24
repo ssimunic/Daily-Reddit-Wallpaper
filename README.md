@@ -53,5 +53,5 @@ Click on Add.
 
 ![Add new startup command](http://i.imgur.com/uFqQ8ky.png)
 
-Note: you can use custom subreddit name argument here aswell.
+Note: you can use ```--subreddit``` and ```--time``` name arguments here aswell.
 
