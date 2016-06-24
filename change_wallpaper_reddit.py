@@ -31,13 +31,12 @@ response = requests.get(imageUrl)
 if response.status_code == 200:
     # Get home directory and location where image will be saved (default location for Ubuntu is used)
     homedir = os.path.expanduser('~')
-    saveLocation = homedir + "/Pictures/Wallpapers/"
-    saveFileName = "wallpaper.jpg"
+    saveLocation = homedir + "/Pictures/Wallpapers/wallpapers.jpg"
 
     # Write to disk
-    with open(saveLocation + saveFileName, 'wb') as fo:
+    with open(saveLocation, 'wb') as fo:
         for chunk in response.iter_content(4096):
             fo.write(chunk)
 
     # Execute command to change wallpaper
-    os.system("gsettings set org.gnome.desktop.background picture-uri file://" + homedir + "/Pictures/Wallpapers/" + saveFileName)
+    os.system("gsettings set org.gnome.desktop.background picture-uri file://" + saveLocation)
