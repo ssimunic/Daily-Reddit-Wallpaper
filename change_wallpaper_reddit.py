@@ -13,13 +13,15 @@ def get_top_image(subreddit):
             return url
         # Imgur support
         if ("imgur.com" in url) and ("/a/" not in url):
+            if url.endswith("/new"):
+                url = url.rsplit("/", 1)[0]
             id = url.rsplit("/", 1)[1].rsplit(".", 1)[0]
             return "http://imgur.com/" + id + ".jpg"
 
 
 # Python Reddit Api Wrapper
 r = praw.Reddit(user_agent="Get top wallpaper from /r/wallpers by /u/ssimunic")
-subreddit = sys.argv[1] if len(sys.argv) > 1 else "wallpapers"
+subreddit = sys.argv[1] if len(sys.argv) > 1 else "art"
 
 # Get top image path
 imageUrl = get_top_image(r.get_subreddit(subreddit))
@@ -37,7 +39,7 @@ if response.status_code == 200:
     dir = os.path.dirname(saveLocation)
     if not os.path.exists(dir):
         os.makedirs(dir)
-        
+
     # Write to disk
     with open(saveLocation, 'wb') as fo:
         for chunk in response.iter_content(4096):
