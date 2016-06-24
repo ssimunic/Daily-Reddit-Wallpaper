@@ -7,7 +7,7 @@ import sys
 
 # Get image link of most upvoted wallpaper of the day
 def get_top_image(subreddit):
-    for submission in subreddit.get_top_from_day(params={'t': sys.argv[2] if len(sys.argv) > 2 else 'day'}, limit=25):
+    for submission in subreddit.get_top_from_day(params={'t': sys.argv[2] if len(sys.argv) > 2 else 'day'}, limit=10):
         url = submission.url
         if url.endswith(".jpg"):
             return url
