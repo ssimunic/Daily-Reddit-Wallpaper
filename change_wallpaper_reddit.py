@@ -4,10 +4,17 @@ import os
 import subprocess
 import requests
 import sys
+import argparse
+
+# Argument parser
+parser = argparse.ArgumentParser()
+parser.add_argument("-s", "--subreddit", type=str, default="wallpapers")
+parser.add_argument("-t", "--time", type=str, default="day")
+args = parser.parse_args()
 
 # Get image link of most upvoted wallpaper of the day
 def get_top_image(subreddit):
-    for submission in subreddit.get_top_from_day(params={'t': sys.argv[2] if len(sys.argv) > 2 else 'day'}, limit=10):
+    for submission in subreddit.get_top_from_day(params={'t': args.time}, limit=10):
         url = submission.url
         if url.endswith(".jpg"):
             return url
@@ -18,10 +25,9 @@ def get_top_image(subreddit):
             id = url.rsplit("/", 1)[1].rsplit(".", 1)[0]
             return "http://imgur.com/" + id + ".jpg"
 
-
 # Python Reddit Api Wrapper
 r = praw.Reddit(user_agent="Get top wallpaper from /r/wallpers by /u/ssimunic")
-subreddit = sys.argv[1] if len(sys.argv) > 1 else "wallpapers"
+subreddit = args.subreddit
 
 # Get top image path
 imageUrl = get_top_image(r.get_subreddit(subreddit))
