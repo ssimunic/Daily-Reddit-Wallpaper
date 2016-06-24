@@ -31,7 +31,7 @@ response = requests.get(imageUrl)
 if response.status_code == 200:
     # Get home directory and location where image will be saved (default location for Ubuntu is used)
     homedir = os.path.expanduser('~')
-    saveLocation = homedir + "/Pictures/Wallpapers/wallpapers.jpg"
+    saveLocation = homedir + "/Pictures/Wallpapers/wallpaper.jpg"
 
     # Write to disk
     with open(saveLocation, 'wb') as fo:
