@@ -14,7 +14,7 @@ args = parser.parse_args()
 
 # Get image link of most upvoted wallpaper of the day
 def get_top_image(subreddit):
-    for submission in subreddit.get_top_from_day(params={'t': args.time}, limit=10):
+    for submission in subreddit.get_top(params={'t': args.time}, limit=10):
         url = submission.url
         if url.endswith(".jpg"):
             return url
