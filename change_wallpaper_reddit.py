@@ -11,8 +11,9 @@ import sys
 
 # Argument parser
 parser = argparse.ArgumentParser()
-parser.add_argument("-s", "--subreddit", type=str, default="wallpapers", help="art, getmotivated, wallpapers, ...")
-parser.add_argument("-t", "--time", type=str, default="day", help="new, hour, day, week, month, year")
+parser.add_argument("-s", "--subreddit", type=str, default="wallpapers", help="Example: art, getmotivated, wallpapers, ...")
+parser.add_argument("-t", "--time", type=str, default="day", help="Example: new, hour, day, week, month, year")
+parser.add_argument("-n", "--nsfw", action='store_true', help="Enables NSFW tagged posts.")
 
 args = parser.parse_args()
 
@@ -20,8 +21,9 @@ args = parser.parse_args()
 def get_top_image(subreddit):
     submissions = subreddit.get_new(limit=10) if args.time=="new" else subreddit.get_top(params={'t': args.time}, limit=10)
     for submission in submissions:
-        if submission.over_18:
-            continue
+        if not args.nsfw:
+            if submission.over_18:
+                continue
         url = submission.url
         if url.endswith(".jpg"):
             return url
