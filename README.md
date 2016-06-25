@@ -8,8 +8,10 @@ This script changes your wallpaper to most upvoted image of the day on /r/wallpa
 
 Dependencies
 =======
-Make sure you have Python installed.
+Make sure you have Python installed and PATH variable set.
 
+Ubuntu
+------
 If you don't have ```pip ``` for Python:
 ```
 sudo apt-get install python-pip
@@ -21,6 +23,11 @@ You will need modules ```requests``` and ```praw``` installed, which can be done
 pip install requests
 pip install praw
 ```
+
+Windows
+------
+Follow [this guide](https://pip.pypa.io/en/stable/installing/) to install  ```pip```  and configure PATH variable.
+The rest is the same.
 
 Using script
 =======
