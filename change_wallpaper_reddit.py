@@ -77,6 +77,8 @@ if response.status_code == 200:
         desktopEnvironment = detect_desktop_environment();
         if desktopEnvironment == 'gnome':
             os.system("gsettings set org.gnome.desktop.background picture-uri file://" + saveLocation)
+        elif desktopEnvironment == 'mate':
+            os.system("gsettings set org.mate.background picture-filename " + saveLocation)
         else:
             print "Unsupported desktop environment"
     if platformName.startswith("Win"):
