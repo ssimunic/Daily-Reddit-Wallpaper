@@ -12,6 +12,7 @@ import time
 parser = argparse.ArgumentParser()
 parser.add_argument("-s", "--subreddit", type=str, default="wallpapers")
 parser.add_argument("-t", "--time", type=str, default="day")
+parser.add_argument("--kde", action="store_true")
 args = parser.parse_args()
 
 # Get image link of most upvoted wallpaper of the day
@@ -55,7 +56,22 @@ if response.status_code == 200:
     # Check if OS is Linux or Windows, then execute command to change wallpaper
     platformName = platform.system()
     if platformName.startswith("Lin"):
-        os.system("gsettings set org.gnome.desktop.background picture-uri file://" + saveLocation)
+        if args.kde:
+            kde_console_string = """
+                qdbus org.kde.plasmashell /PlasmaShell org.kde.PlasmaShell.evaluateScript '
+                    var allDesktops = desktops();
+                    print (allDesktops);
+                    for (i=0;i<allDesktops.length;i++) {{
+                        d = allDesktops[i];
+                        d.wallpaperPlugin = "org.kde.image";
+                        d.currentConfigGroup = Array("Wallpaper", "org.kde.image", "General");
+                        d.writeConfig("Image", "file:///{}")
+                    }}
+                '
+            """
+            os.system(kde_console_string.format(saveLocation))
+        else:
+            os.system("gsettings set org.gnome.desktop.background picture-uri file://" + saveLocation)
     if platformName.startswith("Win"):
         SPI_SETDESKWALLPAPER = 20
         ctypes.windll.user32.SystemParametersInfoA(SPI_SETDESKWALLPAPER, 0, saveLocation, 3)
