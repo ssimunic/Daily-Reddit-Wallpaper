@@ -12,7 +12,6 @@ import time
 parser = argparse.ArgumentParser()
 parser.add_argument("-s", "--subreddit", type=str, default="wallpapers")
 parser.add_argument("-t", "--time", type=str, default="day")
-parser.add_argument("--kde", action="store_true")
 args = parser.parse_args()
 
 # Get image link of most upvoted wallpaper of the day
