@@ -90,3 +90,8 @@ or
 ```
 "D:\change_wallpaper_reddit.py" --subreddit art --time week 
 ```
+
+Running every minute or hour
+=======
+
+Look into using cronjobs on Linux for performing this.
