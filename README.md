@@ -4,7 +4,7 @@ This script changes your wallpaper to most upvoted image of the day on /r/wallpa
 
 **Run it on startup for new wallpaper on every session.**
 
-*Tested on Ubuntu 16.04 and Windows 10.*
+*Supported: Linux (GNOME, KDE, MATE), Windows and OS X*
 
 Dependencies
 =======
