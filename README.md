@@ -49,6 +49,8 @@ Example:
 python /home/silvio/Scripts/change_wallpaper_reddit.py --time week 
 ```
 
+
+Too enable NSFW images, add ```--nsfw```.
 Running on startup
 =======
 Ubuntu
