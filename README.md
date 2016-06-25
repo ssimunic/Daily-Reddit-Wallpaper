@@ -34,6 +34,9 @@ Using script
 Simply run:
 ```
 python /home/silvio/Scripts/change_wallpaper_reddit.py 
+./change_wallpaper_reddit.py --subreddit wallpapers --time new --nsfw
+./change_wallpaper_reddit.py --subreddit earthporn --time new --nsfw
+./change_wallpaper_reddit.py --time new --nsfw
 ```
 
 If you wanna use other subreddit, include argument with the subreddit name:
