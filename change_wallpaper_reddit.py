@@ -7,11 +7,13 @@ import argparse
 import ctypes
 import platform
 import time
+import sys
 
 # Argument parser
 parser = argparse.ArgumentParser()
 parser.add_argument("-s", "--subreddit", type=str, default="wallpapers", help="art, getmotivated, wallpapers, ...")
 parser.add_argument("-t", "--time", type=str, default="day", help="new, hour, day, week, month, year")
+
 args = parser.parse_args()
 
 # Get image link of most upvoted wallpaper of the day
@@ -102,4 +104,9 @@ if response.status_code == 200:
     # Windows
     if platformName.startswith("Win"):
         SPI_SETDESKWALLPAPER = 20
-        ctypes.windll.user32.SystemParametersInfoA(SPI_SETDESKWALLPAPER, 0, saveLocation, 3)
+        # Python 3.x
+        if sys.version_info >= (3, 0):
+            ctypes.windll.user32.SystemParametersInfoW(SPI_SETDESKWALLPAPER, 0, saveLocation, 3)
+        # Python 2.x
+        else:
+            ctypes.windll.user32.SystemParametersInfoA(SPI_SETDESKWALLPAPER, 0, saveLocation, 3)
