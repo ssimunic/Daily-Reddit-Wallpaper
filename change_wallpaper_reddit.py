@@ -29,7 +29,7 @@ def get_top_image(subreddit):
             return "http://imgur.com/" + id + ".jpg"
 
 # Get current Desktop Environment
-# Got from: http://stackoverflow.com/questions/2035657/what-is-my-current-desktop-environment
+# http://stackoverflow.com/questions/2035657/what-is-my-current-desktop-environment
 def detect_desktop_environment():
     desktop_environment = 'generic'
     if os.environ.get('KDE_FULL_SESSION') == 'true':
@@ -72,7 +72,7 @@ if response.status_code == 200:
         for chunk in response.iter_content(4096):
             fo.write(chunk)
 
-    # Check if OS is Linux or Windows, then execute command to change wallpaper
+    # Check OS and environments
     platformName = platform.system()
     if platformName.startswith("Lin"):
 
@@ -98,7 +98,8 @@ if response.status_code == 200:
             os.system(kde_console_string.format(saveLocation))
         else:
             print "Unsupported desktop environment"
-            
+
+    # Windows
     if platformName.startswith("Win"):
         SPI_SETDESKWALLPAPER = 20
         ctypes.windll.user32.SystemParametersInfoA(SPI_SETDESKWALLPAPER, 0, saveLocation, 3)
