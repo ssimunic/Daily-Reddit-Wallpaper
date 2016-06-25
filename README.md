@@ -51,6 +51,8 @@ python /home/silvio/Scripts/change_wallpaper_reddit.py --time week
 
 Running on startup
 =======
+Ubuntu
+------
 To make managment of the script simple, we can accomplish this using built-in Startup Applications.
 
 ![Startup Applications](http://i.imgur.com/NDFmFd9.png)
@@ -61,3 +63,30 @@ Click on Add.
 ![Add new startup command](http://i.imgur.com/uFqQ8ky.png)
 
 Note: you can use ```--subreddit``` and ```--time``` arguments here aswell.
+
+
+Windows
+------
+We will be using Task Scheduler for this. You can find it in Windows search.
+Once you open it, click on ```Create Basic Task```
+Follow the procedure.
+
+![Procedure](http://i.imgur.com/1uZMpyc.png)
+
+![Procedure](http://i.imgur.com/3ApvF6W.png)
+
+![Procedure](http://i.imgur.com/fPdwcyg.png)
+
+![Procedure](http://i.imgur.com/zOCCfQI.png)
+
+In ```Add arguments``` field type the location of the script. Example
+
+```
+"D:\change_wallpaper_reddit.py" 
+```
+
+or 
+
+```
+"D:\change_wallpaper_reddit.py" --subreddit art --time week 
+```
