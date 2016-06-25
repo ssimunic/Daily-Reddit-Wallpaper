@@ -1,10 +1,10 @@
-# Change Ubuntu Wallpaper (on startup)
+# Daily Reddit Wallpaper (on startup)
 This script changes your wallpaper to most upvoted image of the day on /r/wallpapers or from any other subreddit.
 
 
 **Run it on startup for new wallpaper on every session.**
 
-*Tested on Ubuntu 16.04.*
+*Tested on Ubuntu 16.04 and Windows 10.*
 
 Dependencies
 =======
