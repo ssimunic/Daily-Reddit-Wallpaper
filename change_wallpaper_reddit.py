@@ -20,6 +20,8 @@ args = parser.parse_args()
 def get_top_image(subreddit):
     submissions = subreddit.get_new(limit=10) if args.time=="new" else subreddit.get_top(params={'t': args.time}, limit=10)
     for submission in submissions:
+        if submission.over_18:
+            continue
         url = submission.url
         if url.endswith(".jpg"):
             return url
