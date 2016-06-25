@@ -74,6 +74,8 @@ if response.status_code == 200:
     # Check if OS is Linux or Windows, then execute command to change wallpaper
     platformName = platform.system()
     if platformName.startswith("Lin"):
+
+        # Check desktop environments for linux
         desktopEnvironment = detect_desktop_environment();
         if desktopEnvironment == 'gnome':
             os.system("gsettings set org.gnome.desktop.background picture-uri file://" + saveLocation)
