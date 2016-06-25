@@ -10,13 +10,14 @@ import time
 
 # Argument parser
 parser = argparse.ArgumentParser()
-parser.add_argument("-s", "--subreddit", type=str, default="wallpapers")
-parser.add_argument("-t", "--time", type=str, default="day")
+parser.add_argument("-s", "--subreddit", type=str, default="wallpapers", help="art, getmotivated, wallpapers, ...")
+parser.add_argument("-t", "--time", type=str, default="day", help="new, hour, day, week, month, year")
 args = parser.parse_args()
 
 # Get image link of most upvoted wallpaper of the day
 def get_top_image(subreddit):
-    for submission in subreddit.get_top(params={'t': args.time}, limit=10):
+    submissions = subreddit.get_new(limit=10) if args.time=="new" else subreddit.get_top(params={'t': args.time}, limit=10)
+    for submission in submissions:
         url = submission.url
         if url.endswith(".jpg"):
             return url
