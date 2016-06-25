@@ -96,7 +96,7 @@ if __name__ == '__main__':
         home_dir = os.path.expanduser("~")
         save_location = "{home_dir}/Pictures/Wallpapers/{subreddit}-{time}.jpg".format(home_dir=home_dir,
                                                                                        subreddit=subreddit,
-                                                                                       time=time.strftime("%d-%m-%Y"))
+                                                                                       time=time.strftime("%Y-%m-%d-%H-%M-%S"))
 
         # Create folders if they don't exist
         dir = os.path.dirname(save_location)
