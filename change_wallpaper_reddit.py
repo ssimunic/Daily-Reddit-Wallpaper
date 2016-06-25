@@ -110,3 +110,8 @@ if response.status_code == 200:
         # Python 2.x
         else:
             ctypes.windll.user32.SystemParametersInfoA(SPI_SETDESKWALLPAPER, 0, saveLocation, 3)
+
+    # OS X
+    if platformName.startswith("Darwin"):
+        command = "osascript -e 'tell application \"Finder\" to set desktop picture to POSIX file \"" + saveLocation + "\"'"
+        os.system(command)
