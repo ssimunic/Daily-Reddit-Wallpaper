@@ -17,11 +17,10 @@ If you don't have ```pip ``` for Python:
 sudo apt-get install python-pip
 ```
 
-You will need modules ```requests``` and ```praw``` installed, which can be done running following commands:
+You will need modules ```requests``` and ```praw``` installed, which are in requirements.txt:
 
 ```
-pip install requests
-pip install praw
+pip install -r requirements.txt
 ```
 
 Windows
