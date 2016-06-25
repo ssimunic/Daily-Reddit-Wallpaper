@@ -96,4 +96,4 @@ or
 Running every minute or hour
 =======
 
-Look into using cronjobs on Linux for performing this.
+Look into using cronjobs on Linux or Task Scheduler on Windows for performing this.
