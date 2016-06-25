@@ -42,7 +42,7 @@ If you wanna use other subreddit, include argument with the subreddit name:
 python /home/silvio/Scripts/change_wallpaper_reddit.py --subreddit earthporn
 ```
 
-If you don't want to change your wallpaper daily, you can use top weekly, monthly or yearly wallpaper too by adding argument ```week``` or ```month``` or ```year``` to the script.
+If you don't want to change your wallpaper daily, you can use newest, hourly, weekly, monthly or yearly wallpaper too by adding one of the following arguments: ```new```, ```hour```, ```week```, ```month```, ```year``` to the script.
 
 Example:
 ```
