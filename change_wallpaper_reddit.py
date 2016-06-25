@@ -40,7 +40,7 @@ response = requests.get(imageUrl)
 if response.status_code == 200:
     # Get home directory and location where image will be saved (default location for Ubuntu is used)
     homedir = os.path.expanduser('~')
-    saveLocation = homedir + "/Pictures/Wallpapers/" + args.subreddit + " " + time.strftime("%d-%m-%Y") + ".jpg"
+    saveLocation = homedir + "/Pictures/Wallpapers/" + args.subreddit + "-" + time.strftime("%d-%m-%Y") + ".jpg"
 
     # Create folders if they don't exist
     dir = os.path.dirname(saveLocation)
