@@ -8,7 +8,7 @@ This script changes your wallpaper to most upvoted image of the day on /r/wallpa
 
 Dependencies
 =======
-Make sure you have Python installed and PATH variable set.
+Make sure you have Python 2.7.x installed and PATH variable set.
 
 Ubuntu
 ------
