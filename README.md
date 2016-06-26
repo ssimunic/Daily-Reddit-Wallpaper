@@ -48,8 +48,11 @@ Example:
 python /home/silvio/Scripts/change_wallpaper_reddit.py --time week 
 ```
 
-
 Too enable NSFW images, add ```--nsfw```.
+
+On OS X, you can specify display number with option ```--display```. Use 0 for all display (default), 1 for main display and so on.
+
+
 Running on startup
 =======
 Ubuntu
