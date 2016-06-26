@@ -53,6 +53,9 @@ def detect_desktop_environment():
     elif os.environ.get("GNOME_DESKTOP_SESSION_ID"):
         environment["name"] = "gnome"
         environment["command"] = "gsettings set org.gnome.desktop.background picture-uri file://{save_location}"
+    elif os.environ.get("DESKTOP_SESSION") == "Lubuntu":
+        environment["name"] = "lubuntu"
+        environment["command"] = "pcmanfm -w {save_location} --wallpaper-mode=fit"
     elif os.environ.get("DESKTOP_SESSION") == "mate":
         environment["name"] = "mate"
         environment["command"] = "gsettings set org.mate.background picture-filename {save_location}"
@@ -79,7 +82,7 @@ if __name__ == '__main__':
 
     subreddit = args.subreddit
 
-    supported_linux_desktop_envs = ["gnome", "mate", "kde"]
+    supported_linux_desktop_envs = ["gnome", "mate", "kde", "lubuntu"]
 
     # Python Reddit Api Wrapper
     r = praw.Reddit(user_agent="Get top wallpaper from /r/ {subreddit} by /u/ssimunic".format(subreddit=subreddit))
