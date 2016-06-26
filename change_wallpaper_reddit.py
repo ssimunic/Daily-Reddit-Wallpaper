@@ -94,6 +94,9 @@ if __name__ == '__main__':
 
     # Get top image path
     image_url = get_top_image(r.get_subreddit(subreddit))
+    if image_url is None:
+        print >> sys.stderr, "Error: No suitable images were found, the program is now exiting"
+        sys.exit(1)
 
     # Request image
     response = requests.get(image_url)
