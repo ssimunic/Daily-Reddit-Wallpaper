@@ -10,11 +10,70 @@ import re
 import requests
 import sys
 import time
+import ConfigParser
+from collections import defaultdict
 
 if sys.version_info <= (2, 6):
     import commands as subprocess
 else:
     import subprocess
+
+#This class acts enough like a file to sataisfy ConfigParser while adding the
+#section that it requires
+class Section_adder(object):
+    def __init__(self, section, file_handle):
+        self.section = section
+        self.file_handle = file_handle
+        self.first=True
+
+    def readline(self):
+        if self.first:
+            self.first=False
+            return "[{}]".format(self.section)
+        else:
+            return self.file_handle.readline()
+
+def load_config():
+    default=defaultdict(str)
+    default["subreddit"]="wallpapers"
+    default["nsfw"]="False"
+    default["time"]="day"
+    default["display"]="0"
+
+    config_path = os.path.expanduser("~/.change_wallpaper_reddit_rc")
+    section_name="root"
+    try:
+        with open(config_path, "r") as f_:
+            f = Section_adder(section_name, f_)
+            config = ConfigParser.SafeConfigParser( default )
+            config.readfp(f)
+
+            ret = {}
+
+            #add a value to ret, printing an error message if there is an error
+            def add_to_ret( fun, name):
+                try:
+                    ret[name] = fun( section_name, name)
+                except ValueError as e:
+                    err_str = ""
+                    err_str+="Error in config file.  Variable '{}': {} "
+                    err_str+="The default '{}' will be used."
+                    err_str = err_str.format(name, str(e), default[name])
+
+                    print >> sys.stderr , err_str
+                    ret[name] = default[name]
+
+            add_to_ret( config.get, "subreddit")
+            add_to_ret( config.getboolean, "nsfw")
+            add_to_ret( config.getint, "display")
+            add_to_ret( config.get, "time")
+
+            return ret
+
+    except IOError as e:
+        return default
+
+config = load_config()
 
 def parse_args():
     """parse args with argparse
@@ -26,27 +85,28 @@ def parse_args():
     parser.add_argument("-s",
                         "--subreddit",
                         type    = str,
-                        default = "wallpapers",
+                        default = config["subreddit"],
                         help    = """
                                   Example: art, getmotivated, wallpapers, ...
                                   """)
     parser.add_argument("-t",
                         "--time",
                         type    = str,
-                        default = "day",
+                        default = config["time"],
                         help    = """
                                     Example: new, hour, day, week, month, year
                                   """)
     parser.add_argument("-n",
                         "--nsfw",
                         action = 'store_true',
+                        default = config["nsfw"],
                         help   = """
                                  Enables NSFW tagged posts.
                                  """)
     parser.add_argument("-d",
                         "--display",
                         type    = int,
-                        default = 0,
+                        default = config["display"],
                         help    = """
                                   Desktop display number on OS X (0: all
                                   display, 1: main display, ...
