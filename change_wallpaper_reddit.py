@@ -40,7 +40,7 @@ def load_config():
     default["time"]="day"
     default["display"]="0"
 
-    config_path = os.path.expanduser("~/.change_wallpaper_reddit_rc")
+    config_path = os.path.expanduser("~/.config/change_wallpaper_reddit.rc")
     section_name="root"
     try:
         with open(config_path, "r") as f_:
