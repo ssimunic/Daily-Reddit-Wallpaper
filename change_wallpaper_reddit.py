@@ -18,8 +18,8 @@ if sys.version_info <= (2, 6):
 else:
     import subprocess
 
-#This class acts enough like a file to sataisfy ConfigParser while adding the
-#section that it requires
+# This class acts enough like a file to sataisfy ConfigParser while adding the
+# section that it requires
 class Section_adder(object):
     def __init__(self, section, file_handle):
         self.section = section
@@ -50,7 +50,7 @@ def load_config():
 
             ret = {}
 
-            #add a value to ret, printing an error message if there is an error
+            # Add a value to ret, printing an error message if there is an error
             def add_to_ret( fun, name):
                 try:
                     ret[name] = fun( section_name, name)
