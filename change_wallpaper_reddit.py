@@ -13,6 +13,7 @@ if sys.version_info <= (2, 6):
 else:
     import subprocess
 
+
 # Get image link of most upvoted wallpaper of the day
 def get_top_image(sub_reddit):
     submissions = sub_reddit.get_new(limit=10) if args.time == "new" else sub_reddit.get_top(params={"t": args.time},
