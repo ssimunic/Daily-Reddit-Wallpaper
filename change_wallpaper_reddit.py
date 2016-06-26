@@ -136,20 +136,20 @@ if __name__ == '__main__':
         if platform_name.startswith("Darwin"):
             if args.display == 0:
                 command = """osascript -e 'tell application "System Events"
-    set desktopCount to count of desktops
-    repeat with desktopNumber from 1 to desktopCount
-        tell desktop desktopNumber
-            set picture to "{save_location}"
-        end tell
-    end repeat
-end tell'""".format(save_location=save_location)
+                                set desktopCount to count of desktops
+                                repeat with desktopNumber from 1 to desktopCount
+                                    tell desktop desktopNumber
+                                        set picture to "{save_location}"
+                                    end tell
+                                end repeat
+                            end tell'""".format(save_location=save_location)
             else:
                 command = """osascript -e 'tell application "System Events"
-    set desktopCount to count of desktops
-    tell desktop {display}
-        set picture to "{save_location}"
-    end tell
-end tell'""".format(display=args.display, save_location=save_location)
+                                set desktopCount to count of desktops
+                                tell desktop {display}
+                                    set picture to "{save_location}"
+                                end tell
+                            end tell'""".format(display=args.display, save_location=save_location)
             #command = "osascript -e 'tell application \"Finder\" to set desktop picture to POSIX " \
                       #"file \"{save_location}\"'".format(save_location=save_location)
             os.system(command)
