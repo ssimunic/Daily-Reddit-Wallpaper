@@ -103,7 +103,7 @@ Look into using cronjobs on Linux or Task Scheduler on Windows for performing th
 Configuration file
 =======
 
-You can also use configuration file which should be located at ```~/.config/change_wallpaper_reddit.rc```, instead of writing arguments every time you run the script.  
+Instead of writing arguments every time you run the script, you can also use configuration file which should be located at ```~/.config/change_wallpaper_reddit.rc```.
 
 Example of configuration file:
 
