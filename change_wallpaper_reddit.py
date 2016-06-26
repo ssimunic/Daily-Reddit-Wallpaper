@@ -7,6 +7,7 @@ import sys
 import ctypes
 import platform
 import time
+import re
 
 if sys.version_info <= (2, 6):
     import commands as subprocess
@@ -22,8 +23,12 @@ def get_top_image(sub_reddit):
         if not args.nsfw and submission.over_18:
             continue
         url = submission.url
-        if url.endswith(".jpg"):
+        #strip trailing arguments (after a '?')
+        url = re.sub(R"\?.*", "", url)
+        if url.endswith(".jpg") or url.endswith(".png"):
+            print(url)
             return url
+
         # Imgur support
         if ("imgur.com" in url) and ("/a/" not in url):
             if url.endswith("/new"):
