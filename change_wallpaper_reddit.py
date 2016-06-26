@@ -77,6 +77,7 @@ if __name__ == '__main__':
                         help="Example: art, getmotivated, wallpapers, ...")
     parser.add_argument("-t", "--time", type=str, default="day", help="Example: new, hour, day, week, month, year")
     parser.add_argument("-n", "--nsfw", action='store_true', help="Enables NSFW tagged posts.")
+    parser.add_argument("-d", "--display", type=int, default=0, help="Desktop display number on OS X (0: all display, 1: main display, ...")
 
     args = parser.parse_args()
 
@@ -133,6 +134,22 @@ if __name__ == '__main__':
 
         # OS X/macOS
         if platform_name.startswith("Darwin"):
-            command = "osascript -e 'tell application \"Finder\" to set desktop picture to POSIX " \
-                      "file \"{save_location}\"'".format(save_location=save_location)
+            if args.display == 0:
+                command = """osascript -e 'tell application "System Events"
+    set desktopCount to count of desktops
+    repeat with desktopNumber from 1 to desktopCount
+        tell desktop desktopNumber
+            set picture to "{save_location}"
+        end tell
+    end repeat
+end tell'""".format(save_location=save_location)
+            else:
+                command = """osascript -e 'tell application "System Events"
+    set desktopCount to count of desktops
+    tell desktop {display}
+        set picture to "{save_location}"
+    end tell
+end tell'""".format(display=args.display, save_location=save_location)
+            #command = "osascript -e 'tell application \"Finder\" to set desktop picture to POSIX " \
+                      #"file \"{save_location}\"'".format(save_location=save_location)
             os.system(command)
