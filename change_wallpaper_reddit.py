@@ -6,10 +6,10 @@ import ctypes
 import os
 import praw
 import platform
+import re
 import requests
 import sys
 import time
-import re
 
 if sys.version_info <= (2, 6):
     import commands as subprocess
@@ -18,9 +18,7 @@ else:
 
 def parse_args():
     """parse args with argparse
-
     :returns: args
-
     """
     parser = argparse.ArgumentParser(description= """
                                                   Daily Reddit Wallpaper
@@ -59,10 +57,8 @@ def parse_args():
 
 def get_top_image(sub_reddit):
     """Get image link of most upvoted wallpaper of the day
-
     :sub_reddit: name of the sub reddit
     :return: the image link
-
     """
     submissions = sub_reddit.get_new(limit=10)\
                     if args.time == "new"\
@@ -71,12 +67,10 @@ def get_top_image(sub_reddit):
         if not args.nsfw and submission.over_18:
             continue
         url = submission.url
-        #strip trailing arguments (after a '?')
+        # Strip trailing arguments (after a '?')
         url = re.sub(R"\?.*", "", url)
         if url.endswith(".jpg") or url.endswith(".png"):
-            print(url)
             return url
-
         # Imgur support
         if ("imgur.com" in url) and ("/a/" not in url):
             if url.endswith("/new"):
@@ -88,9 +82,7 @@ def detect_desktop_environment():
     """Get current Desktop Environment
        http://stackoverflow.com
        /questions/2035657/what-is-my-current-desktop-environment
-
     :return: environment
-
     """
     environment = {}
     if os.environ.get("KDE_FULL_SESSION") == "true":
