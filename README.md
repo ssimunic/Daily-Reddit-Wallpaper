@@ -4,7 +4,7 @@ This script changes your wallpaper to most upvoted image of the day on [/r/wallp
 
 **Run it on startup for new wallpaper on every session.**
 
-*Supported: Linux (GNOME, KDE, MATE), Windows and OS X*
+*Supported: Linux (gnome, kde, mate, lxde), Windows and OS X*
 
 Dependencies
 =======
