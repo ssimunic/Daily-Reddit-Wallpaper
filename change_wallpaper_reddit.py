@@ -26,7 +26,6 @@ def get_top_image(sub_reddit):
         #strip trailing arguments (after a '?')
         url = re.sub(R"\?.*", "", url)
         if url.endswith(".jpg") or url.endswith(".png"):
-            print(url)
             return url
 
         # Imgur support
