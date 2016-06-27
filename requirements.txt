@@ -1,4 +1,5 @@
 decorator==4.0.10
+future==0.15.2
 praw==3.5.0
 requests==2.10.0
 six==1.10.0
