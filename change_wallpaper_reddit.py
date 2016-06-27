@@ -21,19 +21,21 @@ else:
 
 
 def load_config():
-    default=defaultdict(str)
-    default["subreddit"]="wallpapers"
-    default["nsfw"]="False"
-    default["time"]="day"
-    default["display"]="0"
-    default["output"]="Pictures/Wallpapers"
+    default              = defaultdict(str)
+    default["subreddit"] = "wallpapers"
+    default["nsfw"]      = "False"
+    default["time"]      = "day"
+    default["display"]   = "0"
+    default["output"]    = "Pictures/Wallpapers"
 
-    config_path = os.path.expanduser("~/.config/change_wallpaper_reddit.rc")
-    section_name="root"
+    config_path  = os.path.expanduser("~/.config/change_wallpaper_reddit.rc")
+    section_name = "root"
     try:
         config = ConfigParser(default)
         with open(config_path, "r") as stream:
-            stream = StringIO(u"[" + section_name + "]\n" + stream.read())
+            stream = StringIO(u"[{section_name}]\n{stream_read}".\
+                                            format(section_name=section_name,
+                                                   stream_read=stream.read()))
             if sys.version_info >= (3, 0):
                 config.read_file(stream)
             else:
@@ -41,15 +43,15 @@ def load_config():
 
             ret = {}
 
-            # Add a value to ret, printing an error message if there is an error
-            def add_to_ret( fun, name):
+            #Add a value to ret, printing an error message if there is an error
+            def add_to_ret(fun, name):
                 try:
                     ret[name] = fun( section_name, name)
                 except ValueError as e:
-                    err_str = ""
-                    err_str+="Error in config file.  Variable '{}': {} "
-                    err_str+="The default '{}' will be used."
-                    err_str = err_str.format(name, str(e), default[name])
+                    err_str  = ""
+                    err_str += "Error in config file.  Variable '{}': {} "
+                    err_str += "The default '{}' will be used."
+                    err_str  =  err_str.format(name, str(e), default[name])
 
                     print >> sys.stderr , err_str
                     ret[name] = default[name]
@@ -86,15 +88,15 @@ def parse_args():
                         type    = str,
                         default = config["time"],
                         help    = """
-                                    Example: new, hour, day, week, month, year
+                                  Example: new, hour, day, week, month, year
                                   """)
     parser.add_argument("-n",
                         "--nsfw",
-                        action = 'store_true',
+                        action  = 'store_true',
                         default = config["nsfw"],
-                        help   = """
-                                 Enables NSFW tagged posts.
-                                 """)
+                        help    = """
+                                  Enables NSFW tagged posts.
+                                  """)
     parser.add_argument("-d",
                         "--display",
                         type    = int,
@@ -147,7 +149,7 @@ def detect_desktop_environment():
     """
     environment = {}
     if os.environ.get("KDE_FULL_SESSION") == "true":
-        environment["name"] = "kde"
+        environment["name"]    = "kde"
         environment["command"] = """
                     qdbus org.kde.plasmashell /PlasmaShell
                     org.kde.PlasmaShell.evaluateScript '
@@ -164,15 +166,15 @@ def detect_desktop_environment():
                     '
                 """
     elif os.environ.get("GNOME_DESKTOP_SESSION_ID"):
-        environment["name"] = "gnome"
+        environment["name"]    = "gnome"
         environment["command"] = "gsettings set org.gnome.desktop.background"\
                                  " picture-uri file://{save_location}"
     elif os.environ.get("DESKTOP_SESSION") == "Lubuntu":
-        environment["name"] = "lubuntu"
+        environment["name"]    = "lubuntu"
         environment["command"] = "pcmanfm -w {save_location} --wallpaper-mod"\
                                  "e=fit"
     elif os.environ.get("DESKTOP_SESSION") == "mate":
-        environment["name"] = "mate"
+        environment["name"]    = "mate"
         environment["command"] = "gsettings set org.mate.background picture-"\
                                  "filename {save_location}"
     else:
@@ -188,9 +190,9 @@ def detect_desktop_environment():
 
 if __name__ == '__main__':
 
-    args = parse_args()
+    args      = parse_args()
     subreddit = args.subreddit
-    save_dir = args.output
+    save_dir  = args.output
 
     supported_linux_desktop_envs = ["gnome", "mate", "kde", "lubuntu"]
 
@@ -201,7 +203,8 @@ if __name__ == '__main__':
     # Get top image link
     image_url = get_top_image(r.get_subreddit(subreddit))
     if image_url is None:
-        print >> sys.stderr, "Error: No suitable images were found, the program is now exiting"
+        print >> sys.stderr, "Error: No suitable images were found, the "\
+                                                       "program is now exiting"
         sys.exit(1)
 
     # Request image
@@ -211,7 +214,7 @@ if __name__ == '__main__':
     if response.status_code == requests.codes.ok:
         # Get home directory and location where image will be saved
         # (default location for Ubuntu is used)
-        home_dir = os.path.expanduser("~")
+        home_dir      = os.path.expanduser("~")
         save_location = "{home_dir}/{save_dir}/{subreddit}-"\
                             "{time}.jpg".format(home_dir=home_dir,
                                                 save_dir=save_dir,
