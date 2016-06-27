@@ -10,7 +10,8 @@ import re
 import requests
 import sys
 import time
-import ConfigParser
+from configparser import ConfigParser
+from io import StringIO
 from collections import defaultdict
 
 if sys.version_info <= (2, 6):
@@ -18,20 +19,6 @@ if sys.version_info <= (2, 6):
 else:
     import subprocess
 
-# This class acts enough like a file to sataisfy ConfigParser while adding the
-# section that it requires
-class Section_adder(object):
-    def __init__(self, section, file_handle):
-        self.section = section
-        self.file_handle = file_handle
-        self.first=True
-
-    def readline(self):
-        if self.first:
-            self.first=False
-            return "[{}]".format(self.section)
-        else:
-            return self.file_handle.readline()
 
 def load_config():
     default=defaultdict(str)
@@ -43,10 +30,13 @@ def load_config():
     config_path = os.path.expanduser("~/.config/change_wallpaper_reddit.rc")
     section_name="root"
     try:
-        with open(config_path, "r") as f_:
-            f = Section_adder(section_name, f_)
-            config = ConfigParser.SafeConfigParser( default )
-            config.readfp(f)
+        config = ConfigParser(default)
+        with open(config_path, "r") as stream:
+            stream = StringIO(u"[" + section_name + "]\n" + stream.read())
+            if sys.version_info >= (3, 0):
+                config.read_file(stream)
+            else:
+                config.readfp(stream)
 
             ret = {}
 
