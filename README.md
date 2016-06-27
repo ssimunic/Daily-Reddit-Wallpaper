@@ -52,6 +52,7 @@ NSFW images are disabled by default, to enable them add ```--nsfw```.
 
 On OS X, you can specify display number with option ```--display```. Use 0 for all display (default), 1 for main display and so on.
 
+To change default location where image will be saved, use ```--output folder/subfolder```.
 
 Running on startup
 =======
