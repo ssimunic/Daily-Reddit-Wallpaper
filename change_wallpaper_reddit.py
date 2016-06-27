@@ -149,7 +149,7 @@ def detect_desktop_environment():
     """
     environment = {}
     if os.environ.get("KDE_FULL_SESSION") == "true":
-        environment["name"] = "kde"
+        environment["name"]    = "kde"
         environment["command"] = """
                     qdbus org.kde.plasmashell /PlasmaShell
                     org.kde.PlasmaShell.evaluateScript '
@@ -166,15 +166,15 @@ def detect_desktop_environment():
                     '
                 """
     elif os.environ.get("GNOME_DESKTOP_SESSION_ID"):
-        environment["name"] = "gnome"
+        environment["name"]    = "gnome"
         environment["command"] = "gsettings set org.gnome.desktop.background"\
                                  " picture-uri file://{save_location}"
     elif os.environ.get("DESKTOP_SESSION") == "Lubuntu":
-        environment["name"] = "lubuntu"
+        environment["name"]    = "lubuntu"
         environment["command"] = "pcmanfm -w {save_location} --wallpaper-mod"\
                                  "e=fit"
     elif os.environ.get("DESKTOP_SESSION") == "mate":
-        environment["name"] = "mate"
+        environment["name"]    = "mate"
         environment["command"] = "gsettings set org.mate.background picture-"\
                                  "filename {save_location}"
     else:
@@ -214,7 +214,7 @@ if __name__ == '__main__':
     if response.status_code == requests.codes.ok:
         # Get home directory and location where image will be saved
         # (default location for Ubuntu is used)
-        home_dir = os.path.expanduser("~")
+        home_dir      = os.path.expanduser("~")
         save_location = "{home_dir}/{save_dir}/{subreddit}-"\
                             "{time}.jpg".format(home_dir=home_dir,
                                                 save_dir=save_dir,
