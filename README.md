@@ -1,4 +1,4 @@
-# Daily Reddit Wallpaper (on startup)
+# Daily Reddit Wallpaper
 This script changes your wallpaper to most upvoted image of the day on [/r/wallpapers](https://www.reddit.com/r/wallpapers/) or from any other subreddit.
 
 
