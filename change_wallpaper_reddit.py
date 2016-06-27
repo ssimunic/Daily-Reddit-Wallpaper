@@ -26,6 +26,7 @@ def load_config():
     default["nsfw"]="False"
     default["time"]="day"
     default["display"]="0"
+    default["output"]="Pictures/Wallpapers"
 
     config_path = os.path.expanduser("~/.config/change_wallpaper_reddit.rc")
     section_name="root"
@@ -57,6 +58,7 @@ def load_config():
             add_to_ret( config.getboolean, "nsfw")
             add_to_ret( config.getint, "display")
             add_to_ret( config.get, "time")
+            add_to_ret( config.get, "output")
 
             return ret
 
@@ -100,6 +102,15 @@ def parse_args():
                         help    = """
                                   Desktop display number on OS X (0: all
                                   display, 1: main display, ...
+                                  """)
+
+    parser.add_argument("-o",
+                        "--output",
+                        type    = str,
+                        default = config["output"],
+                        help    = """
+                                  Set the outputfolder in the home directory
+                                  to save the Wallpapers to.
                                   """)
 
     args = parser.parse_args()
@@ -179,6 +190,7 @@ if __name__ == '__main__':
 
     args = parse_args()
     subreddit = args.subreddit
+    save_dir = args.output
 
     supported_linux_desktop_envs = ["gnome", "mate", "kde", "lubuntu"]
 
@@ -200,8 +212,9 @@ if __name__ == '__main__':
         # Get home directory and location where image will be saved
         # (default location for Ubuntu is used)
         home_dir = os.path.expanduser("~")
-        save_location = "{home_dir}/Pictures/Wallpapers/{subreddit}-"\
+        save_location = "{home_dir}/{save_dir}/{subreddit}-"\
                             "{time}.jpg".format(home_dir=home_dir,
+                                                save_dir=save_dir,
                                                 subreddit=subreddit,
                                                 time=time.strftime("%d-%m-%Y"))
 
