@@ -135,7 +135,7 @@ def get_top_image(sub_reddit):
         if url.endswith(".jpg") or url.endswith(".png"):
             return url
         # Imgur support
-        if ("imgur.com" in url) and ("/a/" not in url):
+        if ("imgur.com" in url) and ("/a/" not in url) and ("/gallery/" not in url):
             if url.endswith("/new"):
                 url = url.rsplit("/", 1)[0]
             id = url.rsplit("/", 1)[1].rsplit(".", 1)[0]
@@ -210,6 +210,7 @@ if __name__ == '__main__':
     # Request image
     response = requests.get(image_url)
 
+    print image_url
     # If image is available, proceed to save
     if response.status_code == requests.codes.ok:
         # Get home directory and location where image will be saved
