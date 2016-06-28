@@ -210,7 +210,6 @@ if __name__ == '__main__':
     # Request image
     response = requests.get(image_url)
 
-    print image_url
     # If image is available, proceed to save
     if response.status_code == requests.codes.ok:
         # Get home directory and location where image will be saved
