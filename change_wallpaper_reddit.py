@@ -139,7 +139,7 @@ def get_top_image(sub_reddit):
             if url.endswith("/new"):
                 url = url.rsplit("/", 1)[0]
             id = url.rsplit("/", 1)[1].rsplit(".", 1)[0]
-            return "http://imgur.com/{id}.jpg".format(id=id)
+            return "http://i.imgur.com/{id}.jpg".format(id=id)
 
 def detect_desktop_environment():
     """Get current Desktop Environment
@@ -203,12 +203,11 @@ if __name__ == '__main__':
     # Get top image link
     image_url = get_top_image(r.get_subreddit(subreddit))
     if image_url is None:
-        print >> sys.stderr, "Error: No suitable images were found, the "\
-                                                       "program is now exiting"
-        sys.exit(1)
+        sys.exit("Error: No suitable images were found, the program is now"\
+                                                                " exiting.")
 
     # Request image
-    response = requests.get(image_url)
+    response = requests.get(image_url, allow_redirects=False)
 
     # If image is available, proceed to save
     if response.status_code == requests.codes.ok:
@@ -281,3 +280,6 @@ if __name__ == '__main__':
                             end tell'""".format(display=args.display,
                                                 save_location=save_location)
             os.system(command)
+    else:
+        sys.exit("Error: Image url is not available, the program is now"\
+                                                             " exiting.")
