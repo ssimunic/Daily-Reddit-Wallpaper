@@ -49,7 +49,7 @@ def load_config():
                 except ValueError as e:
                     err_str = "Error in config file.  Variable '{}': {}. The default '{}' will be used."
 
-                    print(sys.stderr, err_str.format(name, str(e), default[name]))
+                    print sys.stderr >> err_str.format(name, str(e), default[name])
                     ret[name] = default[name]
 
             add_to_ret(config.get, "subreddit")
