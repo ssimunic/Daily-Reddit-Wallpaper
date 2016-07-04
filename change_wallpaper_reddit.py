@@ -21,21 +21,20 @@ else:
 
 
 def load_config():
-    default              = defaultdict(str)
+    default = defaultdict(str)
     default["subreddit"] = "wallpapers"
-    default["nsfw"]      = "False"
-    default["time"]      = "day"
-    default["display"]   = "0"
-    default["output"]    = "Pictures/Wallpapers"
+    default["nsfw"] = "False"
+    default["time"] = "day"
+    default["display"] = "0"
+    default["output"] = "Pictures/Wallpapers"
 
-    config_path  = os.path.expanduser("~/.config/change_wallpaper_reddit.rc")
+    config_path = os.path.expanduser("~/.config/change_wallpaper_reddit.rc")
     section_name = "root"
     try:
         config = ConfigParser(default)
         with open(config_path, "r") as stream:
-            stream = StringIO(u"[{section_name}]\n{stream_read}".\
-                                            format(section_name=section_name,
-                                                   stream_read=stream.read()))
+            stream = StringIO("[{section_name}]\n{stream_read}".format(section_name=section_name,
+                                                                       stream_read=stream.read()))
             if sys.version_info >= (3, 0):
                 config.read_file(stream)
             else:
@@ -43,24 +42,21 @@ def load_config():
 
             ret = {}
 
-            #Add a value to ret, printing an error message if there is an error
+            # Add a value to ret, printing an error message if there is an error
             def add_to_ret(fun, name):
                 try:
-                    ret[name] = fun( section_name, name)
+                    ret[name] = fun(section_name, name)
                 except ValueError as e:
-                    err_str  = ""
-                    err_str += "Error in config file.  Variable '{}': {} "
-                    err_str += "The default '{}' will be used."
-                    err_str  =  err_str.format(name, str(e), default[name])
+                    err_str = "Error in config file.  Variable '{}': {}. The default '{}' will be used."
 
-                    print >> sys.stderr , err_str
+                    print sys.stderr >> err_str.format(name, str(e), default[name])
                     ret[name] = default[name]
 
-            add_to_ret( config.get, "subreddit")
-            add_to_ret( config.getboolean, "nsfw")
-            add_to_ret( config.getint, "display")
-            add_to_ret( config.get, "time")
-            add_to_ret( config.get, "output")
+            add_to_ret(config.get, "subreddit")
+            add_to_ret(config.getboolean, "nsfw")
+            add_to_ret(config.getint, "display")
+            add_to_ret(config.get, "time")
+            add_to_ret(config.get, "output")
 
             return ret
 
@@ -69,63 +65,33 @@ def load_config():
 
 config = load_config()
 
+
 def parse_args():
     """parse args with argparse
     :returns: args
     """
-    parser = argparse.ArgumentParser(description= """
-                                                  Daily Reddit Wallpaper
-                                                  """)
-    parser.add_argument("-s",
-                        "--subreddit",
-                        type    = str,
-                        default = config["subreddit"],
-                        help    = """
-                                  Example: art, getmotivated, wallpapers, ...
-                                  """)
-    parser.add_argument("-t",
-                        "--time",
-                        type    = str,
-                        default = config["time"],
-                        help    = """
-                                  Example: new, hour, day, week, month, year
-                                  """)
-    parser.add_argument("-n",
-                        "--nsfw",
-                        action  = 'store_true',
-                        default = config["nsfw"],
-                        help    = """
-                                  Enables NSFW tagged posts.
-                                  """)
-    parser.add_argument("-d",
-                        "--display",
-                        type    = int,
-                        default = config["display"],
-                        help    = """
-                                  Desktop display number on OS X (0: all
-                                  display, 1: main display, ...
-                                  """)
-
-    parser.add_argument("-o",
-                        "--output",
-                        type    = str,
-                        default = config["output"],
-                        help    = """
-                                  Set the outputfolder in the home directory
-                                  to save the Wallpapers to.
-                                  """)
+    parser = argparse.ArgumentParser(description="Daily Reddit Wallpaper")
+    parser.add_argument("-s", "--subreddit", type=str, default=config["subreddit"],
+                        help="Example: art, getmotivated, wallpapers, ...")
+    parser.add_argument("-t", "--time", type=str, default=config["time"],
+                        help="Example: new, hour, day, week, month, year")
+    parser.add_argument("-n", "--nsfw", action='store_true', default=config["nsfw"], help="Enables NSFW tagged posts.")
+    parser.add_argument("-d", "--display", type=int, default=config["display"],
+                        help="Desktop display number on OS X (0: all displays, 1: main display, etc")
+    parser.add_argument("-o", "--output", type=str, default=config["output"],
+                        help="Set the outputfolder in the home directory to save the Wallpapers to.")
 
     args = parser.parse_args()
     return args
+
 
 def get_top_image(sub_reddit):
     """Get image link of most upvoted wallpaper of the day
     :sub_reddit: name of the sub reddit
     :return: the image link
     """
-    submissions = sub_reddit.get_new(limit=10)\
-                    if args.time == "new"\
-                    else sub_reddit.get_top(params={"t": args.time}, limit=10)
+    submissions = sub_reddit.get_new(limit=10) if args.time == "new" else sub_reddit.get_top(params={"t": args.time},
+                                                                                             limit=10)
     for submission in submissions:
         if not args.nsfw and submission.over_18:
             continue
@@ -141,6 +107,7 @@ def get_top_image(sub_reddit):
             id = url.rsplit("/", 1)[1].rsplit(".", 1)[0]
             return "http://i.imgur.com/{id}.jpg".format(id=id)
 
+
 def detect_desktop_environment():
     """Get current Desktop Environment
        http://stackoverflow.com
@@ -149,7 +116,7 @@ def detect_desktop_environment():
     """
     environment = {}
     if os.environ.get("KDE_FULL_SESSION") == "true":
-        environment["name"]    = "kde"
+        environment["name"] = "kde"
         environment["command"] = """
                     qdbus org.kde.plasmashell /PlasmaShell
                     org.kde.PlasmaShell.evaluateScript '
@@ -166,17 +133,14 @@ def detect_desktop_environment():
                     '
                 """
     elif os.environ.get("GNOME_DESKTOP_SESSION_ID"):
-        environment["name"]    = "gnome"
-        environment["command"] = "gsettings set org.gnome.desktop.background"\
-                                 " picture-uri file://{save_location}"
+        environment["name"] = "gnome"
+        environment["command"] = "gsettings set org.gnome.desktop.background picture-uri file://{save_location}"
     elif os.environ.get("DESKTOP_SESSION") == "Lubuntu":
-        environment["name"]    = "lubuntu"
-        environment["command"] = "pcmanfm -w {save_location} --wallpaper-mod"\
-                                 "e=fit"
+        environment["name"] = "lubuntu"
+        environment["command"] = "pcmanfm -w {save_location} --wallpaper-mode=fit"
     elif os.environ.get("DESKTOP_SESSION") == "mate":
-        environment["name"]    = "mate"
-        environment["command"] = "gsettings set org.mate.background picture-"\
-                                 "filename {save_location}"
+        environment["name"] = "mate"
+        environment["command"] = "gsettings set org.mate.background picture-filename {save_location}"
     else:
         try:
             info = subprocess.getoutput("xprop -root _DT_SAVE_MODE")
@@ -190,21 +154,20 @@ def detect_desktop_environment():
 
 if __name__ == '__main__':
 
-    args      = parse_args()
+    args = parse_args()
     subreddit = args.subreddit
-    save_dir  = args.output
+    save_dir = args.output
 
     supported_linux_desktop_envs = ["gnome", "mate", "kde", "lubuntu"]
 
     # Python Reddit Api Wrapper
-    r = praw.Reddit(user_agent="Get top wallpaper from /r/ {subreddit}"\
-                               " by /u/ssimunic".format(subreddit=subreddit))
+    r = praw.Reddit(user_agent="Get top wallpaper from /r/{subreddit} by /u/ssimunic".format(subreddit=subreddit))
 
     # Get top image link
     image_url = get_top_image(r.get_subreddit(subreddit))
     if image_url is None:
-        sys.exit("Error: No suitable images were found, the program is now"\
-                                                                " exiting.")
+        sys.exit("Error: No suitable images were found, the program is now" \
+                 " exiting.")
 
     # Request image
     response = requests.get(image_url, allow_redirects=False)
@@ -213,12 +176,10 @@ if __name__ == '__main__':
     if response.status_code == requests.codes.ok:
         # Get home directory and location where image will be saved
         # (default location for Ubuntu is used)
-        home_dir      = os.path.expanduser("~")
-        save_location = "{home_dir}/{save_dir}/{subreddit}-"\
-                            "{time}.jpg".format(home_dir=home_dir,
-                                                save_dir=save_dir,
-                                                subreddit=subreddit,
-                                                time=time.strftime("%d-%m-%Y"))
+        home_dir = os.path.expanduser("~")
+        save_location = "{home_dir}/{save_dir}/{subreddit}-{time}.jpg".format(home_dir=home_dir, save_dir=save_dir,
+                                                                              subreddit=subreddit,
+                                                                              time=time.strftime("%d-%m-%Y"))
 
         # Create folders if they don't exist
         dir = os.path.dirname(save_location)
@@ -236,10 +197,8 @@ if __name__ == '__main__':
 
             # Check desktop environments for linux
             desktop_environment = detect_desktop_environment()
-            if desktop_environment and desktop_environment["name"] in\
-                                                supported_linux_desktop_envs:
-                os.system(desktop_environment["command"].\
-                                          format(save_location=save_location))
+            if desktop_environment and desktop_environment["name"] in supported_linux_desktop_envs:
+                os.system(desktop_environment["command"].format(save_location=save_location))
             else:
                 print("Unsupported desktop environment")
 
@@ -247,16 +206,10 @@ if __name__ == '__main__':
         if platform_name.startswith("Win"):
             # Python 3.x
             if sys.version_info >= (3, 0):
-                ctypes.windll.user32.SystemParametersInfoW(20,
-                                                           0,
-                                                           save_location,
-                                                           3)
+                ctypes.windll.user32.SystemParametersInfoW(20, 0, save_location, 3)
             # Python 2.x
             else:
-                ctypes.windll.user32.SystemParametersInfoA(20,
-                                                           0,
-                                                           save_location,
-                                                           3)
+                ctypes.windll.user32.SystemParametersInfoA(20, 0, save_location, 3)
 
         # OS X/macOS
         if platform_name.startswith("Darwin"):
@@ -281,5 +234,4 @@ if __name__ == '__main__':
                                                 save_location=save_location)
             os.system(command)
     else:
-        sys.exit("Error: Image url is not available, the program is now"\
-                                                             " exiting.")
+        sys.exit("Error: Image url is not available, the program is now exiting.")
