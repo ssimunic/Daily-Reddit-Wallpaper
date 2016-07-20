@@ -1,0 +1,155 @@
+<!doctype html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="chrome=1">
+    <title>Daily Reddit Wallpaper by ssimunic</title>
+
+    <link rel="stylesheet" href="stylesheets/styles.css">
+    <link rel="stylesheet" href="stylesheets/github-light.css">
+    <meta name="viewport" content="width=device-width">
+    <!--[if lt IE 9]>
+    <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+  </head>
+  <body>
+    <div class="wrapper">
+      <header>
+        <h1>Daily Reddit Wallpaper</h1>
+        <p>Changes your wallpaper to most upvoted image of the day on /r/wallpapers or from any other subreddit on system startup.</p>
+
+        <p class="view"><a href="https://github.com/ssimunic/Daily-Reddit-Wallpaper">View the Project on GitHub <small>ssimunic/Daily-Reddit-Wallpaper</small></a></p>
+
+
+        <ul>
+          <li><a href="https://github.com/ssimunic/Daily-Reddit-Wallpaper/zipball/master">Download <strong>ZIP File</strong></a></li>
+          <li><a href="https://github.com/ssimunic/Daily-Reddit-Wallpaper/tarball/master">Download <strong>TAR Ball</strong></a></li>
+          <li><a href="https://github.com/ssimunic/Daily-Reddit-Wallpaper">View On <strong>GitHub</strong></a></li>
+        </ul>
+      </header>
+      <section>
+        <h1>
+<a id="daily-reddit-wallpaper" class="anchor" href="#daily-reddit-wallpaper" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Daily Reddit Wallpaper</h1>
+
+<p>This script changes your wallpaper to most upvoted image of the day on <a href="https://www.reddit.com/r/wallpapers/">/r/wallpapers</a> or from any other subreddit.</p>
+
+<p><strong>Run it on startup for new wallpaper on every session.</strong></p>
+
+<p><em>Supported: Linux (gnome, kde, mate, lxde), Windows and OS X</em></p>
+
+<h1>
+<a id="dependencies" class="anchor" href="#dependencies" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Dependencies</h1>
+
+<p>Make sure you have <a href="https://www.python.org/downloads/">Python</a> installed and PATH variable set.</p>
+
+<h2>
+<a id="ubuntu" class="anchor" href="#ubuntu" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Ubuntu</h2>
+
+<p>If you don't have <code>pip</code> for Python:</p>
+
+<pre><code>sudo apt-get install python-pip
+</code></pre>
+
+<p>You will need modules <code>requests</code> and <code>praw</code> installed, which are in requirements.txt:</p>
+
+<pre><code>pip install -r requirements.txt
+</code></pre>
+
+<h2>
+<a id="windows" class="anchor" href="#windows" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Windows</h2>
+
+<p>Follow <a href="https://pip.pypa.io/en/stable/installing/">this guide</a> to install  <code>pip</code>  and configure PATH variable.
+The rest is the same.</p>
+
+<h1>
+<a id="using-script" class="anchor" href="#using-script" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Using script</h1>
+
+<p>Simply run:</p>
+
+<pre><code>python /home/silvio/Scripts/change_wallpaper_reddit.py 
+</code></pre>
+
+<p>If you wanna use other subreddit, include argument with the subreddit name:</p>
+
+<pre><code>python /home/silvio/Scripts/change_wallpaper_reddit.py --subreddit art
+</code></pre>
+
+<p>If you don't want to change your wallpaper daily, you can use newest, hourly, weekly, monthly or yearly wallpaper too by adding one of the following arguments: <code>new</code>, <code>hour</code>, <code>week</code>, <code>month</code>, <code>year</code> to the script.</p>
+
+<p>Example:</p>
+
+<pre><code>python /home/silvio/Scripts/change_wallpaper_reddit.py --time week 
+</code></pre>
+
+<p>NSFW images are disabled by default, to enable them add <code>--nsfw</code>.</p>
+
+<p>On OS X, you can specify display number with option <code>--display</code>. Use 0 for all display (default), 1 for main display and so on.</p>
+
+<p>To change default location where image will be saved, use <code>--output folder/subfolder</code>.</p>
+
+<h1>
+<a id="running-on-startup" class="anchor" href="#running-on-startup" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Running on startup</h1>
+
+<h2>
+<a id="ubuntu-1" class="anchor" href="#ubuntu-1" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Ubuntu</h2>
+
+<p>To make managment of the script simple, we can accomplish this using built-in Startup Applications.</p>
+
+<p><img src="http://i.imgur.com/NDFmFd9.png" alt="Startup Applications"></p>
+
+<p>Click on Add.</p>
+
+<p><img src="http://i.imgur.com/uFqQ8ky.png" alt="Add new startup command"></p>
+
+<p>Note: you can use <code>--subreddit</code> and <code>--time</code> arguments here aswell.</p>
+
+<h2>
+<a id="windows-1" class="anchor" href="#windows-1" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Windows</h2>
+
+<p>We will be using Task Scheduler for this. You can find it in Windows search.
+Once you open it, click on <code>Create Basic Task</code>
+Follow the procedure.</p>
+
+<p><img src="http://i.imgur.com/1uZMpyc.png" alt="Procedure"></p>
+
+<p><img src="http://i.imgur.com/3ApvF6W.png" alt="Procedure"></p>
+
+<p><img src="http://i.imgur.com/fPdwcyg.png" alt="Procedure"></p>
+
+<p><img src="http://i.imgur.com/zOCCfQI.png" alt="Procedure"></p>
+
+<p>In <code>Add arguments</code> field type the location of the script. Example</p>
+
+<pre><code>"D:\change_wallpaper_reddit.py" 
+</code></pre>
+
+<p>or </p>
+
+<pre><code>"D:\change_wallpaper_reddit.py" --subreddit art --time week 
+</code></pre>
+
+<h1>
+<a id="running-every-minute-or-hour" class="anchor" href="#running-every-minute-or-hour" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Running every minute or hour</h1>
+
+<p>Look into using cronjobs on Linux or Task Scheduler on Windows for performing this.</p>
+
+<h1>
+<a id="configuration-file" class="anchor" href="#configuration-file" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Configuration file</h1>
+
+<p>Instead of writing arguments every time you run the script, you can also use configuration file which should be located at <code>~/.config/change_wallpaper_reddit.rc</code>.</p>
+
+<p>Example of configuration file:</p>
+
+<pre><code>subreddit=art
+time=day
+</code></pre>
+      </section>
+      <footer>
+        <p>This project is maintained by <a href="https://github.com/ssimunic">ssimunic</a></p>
+        <p><small>Hosted on GitHub Pages &mdash; Theme by <a href="https://github.com/orderedlist">orderedlist</a></small></p>
+      </footer>
+    </div>
+    <script src="javascripts/scale.fix.js"></script>
+    
+  </body>
+</html>
