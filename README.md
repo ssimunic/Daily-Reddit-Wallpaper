@@ -1,4 +1,6 @@
 # Daily Reddit Wallpaper
+[![Build Status](https://travis-ci.org/ssimunic/Daily-Reddit-Wallpaper.svg?branch=master)](https://travis-ci.org/ssimunic/Daily-Reddit-Wallpaper)
+
 This script changes your wallpaper to most upvoted image of the day on [/r/wallpapers](https://www.reddit.com/r/wallpapers/) or from any other subreddit.
 
 
@@ -33,7 +35,7 @@ Using script
 
 Simply run:
 ```
-python /home/silvio/Scripts/change_wallpaper_reddit.py 
+python /home/silvio/Scripts/change_wallpaper_reddit.py
 ```
 
 If you wanna use other subreddit, include argument with the subreddit name:
@@ -45,7 +47,7 @@ If you don't want to change your wallpaper daily, you can use newest, hourly, we
 
 Example:
 ```
-python /home/silvio/Scripts/change_wallpaper_reddit.py --time week 
+python /home/silvio/Scripts/change_wallpaper_reddit.py --time week
 ```
 
 NSFW images are disabled by default, to enable them add ```--nsfw```.
@@ -87,13 +89,13 @@ Follow the procedure.
 In ```Add arguments``` field type the location of the script. Example
 
 ```
-"D:\change_wallpaper_reddit.py" 
+"D:\change_wallpaper_reddit.py"
 ```
 
-or 
+or
 
 ```
-"D:\change_wallpaper_reddit.py" --subreddit art --time week 
+"D:\change_wallpaper_reddit.py" --subreddit art --time week
 ```
 
 Running every minute or hour
