@@ -185,9 +185,8 @@ if __name__ == '__main__':
                                                                             id=image["id"])
 
         if os.path.isfile(save_location):
-            print("Info: Image already exists, nothing to do, the program is" \
+            sys.exit("Info: Image already exists, nothing to do, the program is" \
                   " now exiting")
-            sys.exit(0)
 
         # Create folders if they don't exist
         dir = os.path.dirname(save_location)
