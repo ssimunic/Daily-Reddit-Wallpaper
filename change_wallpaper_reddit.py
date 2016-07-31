@@ -93,19 +93,22 @@ def get_top_image(sub_reddit):
     submissions = sub_reddit.get_new(limit=10) if args.time == "new" else sub_reddit.get_top(params={"t": args.time},
                                                                                              limit=10)
     for submission in submissions:
+        ret = {"id": submission.id}
         if not args.nsfw and submission.over_18:
             continue
         url = submission.url
         # Strip trailing arguments (after a '?')
         url = re.sub(R"\?.*", "", url)
         if url.endswith(".jpg") or url.endswith(".png"):
-            return url
+            ret["url"] = url
+            return ret
         # Imgur support
         if ("imgur.com" in url) and ("/a/" not in url) and ("/gallery/" not in url):
             if url.endswith("/new"):
                 url = url.rsplit("/", 1)[0]
             id = url.rsplit("/", 1)[1].rsplit(".", 1)[0]
-            return "http://i.imgur.com/{id}.jpg".format(id=id)
+            ret["url"] = "http://i.imgur.com/{id}.jpg".format(id=id)
+            return ret
 
 
 def detect_desktop_environment():
@@ -164,22 +167,27 @@ if __name__ == '__main__':
     r = praw.Reddit(user_agent="Get top wallpaper from /r/{subreddit} by /u/ssimunic".format(subreddit=subreddit))
 
     # Get top image link
-    image_url = get_top_image(r.get_subreddit(subreddit))
-    if image_url is None:
+    image = get_top_image(r.get_subreddit(subreddit))
+    if "url" not in image:
         sys.exit("Error: No suitable images were found, the program is now" \
                  " exiting.")
 
     # Request image
-    response = requests.get(image_url, allow_redirects=False)
+    response = requests.get(image["url"], allow_redirects=False)
 
     # If image is available, proceed to save
     if response.status_code == requests.codes.ok:
         # Get home directory and location where image will be saved
         # (default location for Ubuntu is used)
         home_dir = os.path.expanduser("~")
-        save_location = "{home_dir}/{save_dir}/{subreddit}-{time}.jpg".format(home_dir=home_dir, save_dir=save_dir,
-                                                                              subreddit=subreddit,
-                                                                              time=time.strftime("%d-%m-%Y"))
+        save_location = "{home_dir}/{save_dir}/{subreddit}-{id}.jpg".format(home_dir=home_dir, save_dir=save_dir,
+                                                                            subreddit=subreddit,
+                                                                            id=image["id"])
+
+        if os.path.isfile(save_location):
+            print("Info: Image already exists, nothing to do, the program is" \
+                  " now exiting")
+            sys.exit(0)
 
         # Create folders if they don't exist
         dir = os.path.dirname(save_location)
