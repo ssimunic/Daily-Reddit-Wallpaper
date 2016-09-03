@@ -121,8 +121,7 @@ def detect_desktop_environment():
     if os.environ.get("KDE_FULL_SESSION") == "true":
         environment["name"] = "kde"
         environment["command"] = """
-                    qdbus org.kde.plasmashell /PlasmaShell
-                    org.kde.PlasmaShell.evaluateScript '
+                    qdbus org.kde.plasmashell /PlasmaShell org.kde.PlasmaShell.evaluateScript '
                         var allDesktops = desktops();
                         print (allDesktops);
                         for (i=0;i<allDesktops.length;i++) {{
