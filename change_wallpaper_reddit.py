@@ -215,7 +215,10 @@ if __name__ == '__main__':
                 ctypes.windll.user32.SystemParametersInfoW(20, 0, save_location, 3)
             # Python 2.x
             else:
-                ctypes.windll.user32.SystemParametersInfoA(20, 0, save_location, 3)
+                if isinstance(save_location, str):
+                    ctypes.windll.user32.SystemParametersInfoA(20, 0, save_location, 3)
+                else:
+                    ctypes.windll.user32.SystemParametersInfoW(20, 0, save_location, 3)
 
         # OS X/macOS
         if platform_name.startswith("Darwin"):
