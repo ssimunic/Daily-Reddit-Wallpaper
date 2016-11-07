@@ -14,14 +14,14 @@ from collections import defaultdict
 from libdesktop import wallpaper
 
 
-
 def load_config():
     default = defaultdict(str)
     default["subreddit"] = "wallpapers"
-    default["nsfw"] = "False"
+    default["nsfw"] = ""  # Empty String evaluates to False
     default["time"] = "day"
     default["display"] = "0"
     default["output"] = "Pictures/Wallpapers"
+    default["force"] = ""  # Empty String evaluates to False
 
     config_path = os.path.expanduser("~/.config/change_wallpaper_reddit.rc")
     section_name = "root"
@@ -52,6 +52,7 @@ def load_config():
             add_to_ret(config.getint, "display")
             add_to_ret(config.get, "time")
             add_to_ret(config.get, "output")
+            add_to_ret(config.getboolean, "force")
 
             return ret
 
@@ -75,8 +76,14 @@ def parse_args():
                         help="Desktop display number on OS X (0: all displays, 1: main display, etc")
     parser.add_argument("-o", "--output", type=str, default=config["output"],
                         help="Set the outputfolder in the home directory to save the Wallpapers to.")
-
+    parser.add_argument("-f", "--force", action='store_true', default=config["force"],
+                        help="Overwrite Image if it is already saved.")
     args = parser.parse_args()
+
+    # Explicitly cast to bool, because only the empty String "" evaluates to False, everything else to True
+    args.force = bool(args.force)
+    args.nsfw = bool(args.nsfw)
+
     return args
 
 
@@ -133,7 +140,7 @@ if __name__ == '__main__':
                                                                             subreddit=subreddit,
                                                                             id=image["id"])
 
-        if os.path.isfile(save_location):
+        if os.path.isfile(save_location) and not args.force:
             sys.exit("Info: Image already exists, nothing to do, the program is" \
                   " now exiting")
 
