@@ -2,17 +2,22 @@
 # -*- coding: utf-8 -*-
 from __future__ import unicode_literals
 import argparse
+import ctypes
 import os
 import praw
 import platform
 import re
 import requests
 import sys
+import time
 from configparser import ConfigParser
 from io import StringIO
 from collections import defaultdict
-from libdesktop import wallpaper
 
+if sys.version_info <= (2, 6):
+    import commands as subprocess
+else:
+    import subprocess
 
 
 def load_config():
@@ -106,11 +111,56 @@ def get_top_image(sub_reddit):
             return ret
 
 
+def detect_desktop_environment():
+    """Get current Desktop Environment
+       http://stackoverflow.com
+       /questions/2035657/what-is-my-current-desktop-environment
+    :return: environment
+    """
+    environment = {}
+    if os.environ.get("KDE_FULL_SESSION") == "true":
+        environment["name"] = "kde"
+        environment["command"] = """
+                    qdbus org.kde.plasmashell /PlasmaShell org.kde.PlasmaShell.evaluateScript '
+                        var allDesktops = desktops();
+                        print (allDesktops);
+                        for (i=0;i<allDesktops.length;i++) {{
+                            d = allDesktops[i];
+                            d.wallpaperPlugin = "org.kde.image";
+                            d.currentConfigGroup = Array("Wallpaper",
+                                                   "org.kde.image",
+                                                   "General");
+                            d.writeConfig("Image", "file:///{save_location}")
+                        }}
+                    '
+                """
+    elif os.environ.get("GNOME_DESKTOP_SESSION_ID"):
+        environment["name"] = "gnome"
+        environment["command"] = "gsettings set org.gnome.desktop.background picture-uri file://{save_location}"
+    elif os.environ.get("DESKTOP_SESSION") == "Lubuntu":
+        environment["name"] = "lubuntu"
+        environment["command"] = "pcmanfm -w {save_location} --wallpaper-mode=fit"
+    elif os.environ.get("DESKTOP_SESSION") == "mate":
+        environment["name"] = "mate"
+        environment["command"] = "gsettings set org.mate.background picture-filename {save_location}"
+    else:
+        try:
+            info = subprocess.getoutput("xprop -root _DT_SAVE_MODE")
+            if ' = "xfce4"' in info:
+                environment["name"] = "xfce"
+        except (OSError, RuntimeError):
+            environment = None
+            pass
+    return environment
+
+
 if __name__ == '__main__':
 
     args = parse_args()
     subreddit = args.subreddit
     save_dir = args.output
+
+    supported_linux_desktop_envs = ["gnome", "mate", "kde", "lubuntu"]
 
     # Python Reddit Api Wrapper
     r = praw.Reddit(user_agent="Get top wallpaper from /r/{subreddit} by /u/ssimunic".format(subreddit=subreddit))
@@ -149,10 +199,23 @@ if __name__ == '__main__':
 
         # Check OS and environments
         platform_name = platform.system()
+        if platform_name.startswith("Lin"):
 
-        # Linux / Windows
-        if platform_name.startswith("Lin") or platform_name.startswith("Win"):
-            wallpaper.set(image=save_location)
+            # Check desktop environments for linux
+            desktop_environment = detect_desktop_environment()
+            if desktop_environment and desktop_environment["name"] in supported_linux_desktop_envs:
+                os.system(desktop_environment["command"].format(save_location=save_location))
+            else:
+                print("Unsupported desktop environment")
+
+        # Windows
+        if platform_name.startswith("Win"):
+            # Python 3.x
+            if sys.version_info >= (3, 0):
+                ctypes.windll.user32.SystemParametersInfoW(20, 0, save_location, 3)
+            # Python 2.x
+            else:
+                ctypes.windll.user32.SystemParametersInfoA(20, 0, save_location, 3)
 
         # OS X/macOS
         if platform_name.startswith("Darwin"):
