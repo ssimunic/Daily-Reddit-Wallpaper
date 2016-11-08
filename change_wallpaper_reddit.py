@@ -23,7 +23,7 @@ else:
 def load_config():
     default = defaultdict(str)
     default["subreddit"] = "wallpapers"
-    default["nsfw"] = "False"
+    default["nsfw"] = ""  # Empty String evaluates to False
     default["time"] = "day"
     default["display"] = "0"
     default["output"] = "Pictures/Wallpapers"
@@ -82,6 +82,9 @@ def parse_args():
                         help="Set the outputfolder in the home directory to save the Wallpapers to.")
 
     args = parser.parse_args()
+
+    args.nsfw = bool(args.nsfw)
+
     return args
 
 
