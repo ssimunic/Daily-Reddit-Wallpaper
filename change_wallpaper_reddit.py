@@ -90,7 +90,7 @@ def get_top_image(sub_reddit):
     :sub_reddit: name of the sub reddit
     :return: the image link
     """
-    submissions = sub_reddit.get_new(limit=10) if args.time == "new" else sub_reddit.get_top(params={"t": args.time},
+    submissions = sub_reddit.get_new(limit=10) if args.time == "new" else sub_reddit.top(params={"t": args.time},
                                                                                              limit=10)
     for submission in submissions:
         ret = {"id": submission.id}
@@ -163,8 +163,8 @@ if __name__ == '__main__':
     supported_linux_desktop_envs = ["gnome", "mate", "kde", "lubuntu"]
 
     # Python Reddit Api Wrapper
-    r = praw.Reddit(user_agent="Get top wallpaper from /r/{subreddit} by /u/ssimunic".format(subreddit=subreddit))
-
+    r = praw.Reddit('dailywallpaper', user_agent="Get top wallpaper from /r/{subreddit} by /u/ssimunic".format(subreddit=subreddit))
+    
     # Get top image link
     image = get_top_image(r.get_subreddit(subreddit))
     if "url" not in image:
