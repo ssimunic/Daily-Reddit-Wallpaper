@@ -34,6 +34,7 @@ Using script
 =======
 
 Update praw.ini:
+
 You need to register this app with your reddit account.
 https://www.reddit.com/prefs/apps/
 
