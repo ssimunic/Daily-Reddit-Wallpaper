@@ -33,6 +33,14 @@ The rest is the same.
 Using script
 =======
 
+Update praw.ini:
+You need to register this app with your reddit account.
+https://www.reddit.com/prefs/apps/
+
+You need to copy your client id and client secret into the praw.ini file.
+The id will be in the upper left corner of your app information (it will be a long alphanumeric string).
+The secret will be labeled "secret".
+
 Simply run:
 ```
 python /home/silvio/Scripts/change_wallpaper_reddit.py
