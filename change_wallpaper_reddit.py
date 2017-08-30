@@ -166,7 +166,7 @@ if __name__ == '__main__':
     r = praw.Reddit('dailywallpaper', user_agent="Get top wallpaper from /r/{subreddit} by /u/ssimunic".format(subreddit=subreddit))
     
     # Get top image link
-    image = get_top_image(r.get_subreddit(subreddit))
+    image = get_top_image(r.subreddit(subreddit))
     if "url" not in image:
         sys.exit("Error: No suitable images were found, the program is now" \
                  " exiting.")
