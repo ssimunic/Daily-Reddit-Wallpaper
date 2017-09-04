@@ -125,7 +125,7 @@ KDE:
 export KDE_FULL_SESSION=true
 ```
 
-Gnome or Cinnamon:
+GNOME or Cinnamon:
 ```
 export GNOME_DESKTOP_SESSION_ID=anything
 ```
