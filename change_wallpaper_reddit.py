@@ -99,8 +99,10 @@ def get_top_image(sub_reddit):
         url = submission.url
         # Strip trailing arguments (after a '?')
         url = re.sub(R"\?.*", "", url)
+        imageType = url.split('.')[-1]
         if url.endswith(".jpg") or url.endswith(".png"):
             ret["url"] = url
+            ret["type"] = imageType
             return ret
         # Imgur support
         if ("imgur.com" in url) and ("/a/" not in url) and ("/gallery/" not in url):
@@ -108,6 +110,7 @@ def get_top_image(sub_reddit):
                 url = url.rsplit("/", 1)[0]
             id = url.rsplit("/", 1)[1].rsplit(".", 1)[0]
             ret["url"] = "http://i.imgur.com/{id}.jpg".format(id=id)
+            ret["type"] = 'jpg'
             return ret
 
 
@@ -178,10 +181,12 @@ if __name__ == '__main__':
     if response.status_code == requests.codes.ok:
         # Get home directory and location where image will be saved
         # (default location for Ubuntu is used)
+        
         home_dir = os.path.expanduser("~")
-        save_location = "{home_dir}/{save_dir}/{subreddit}-{id}.jpg".format(home_dir=home_dir, save_dir=save_dir,
+        save_location = "{home_dir}/{save_dir}/{subreddit}-{id}.{imageType}".format(home_dir=home_dir, save_dir=save_dir,
                                                                             subreddit=subreddit,
-                                                                            id=image["id"])
+                                                                            id=image["id"],
+                                                                            imageType=image["type"])
 
         if os.path.isfile(save_location):
             sys.exit("Info: Image already exists, nothing to do, the program is" \
