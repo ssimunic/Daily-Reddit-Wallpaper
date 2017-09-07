@@ -110,7 +110,37 @@ or
 Running every minute or hour
 =======
 
-Look into using cronjobs on Linux or Task Scheduler on Windows for performing this.
+You can configure this script to run at timed intervals in Windows using the Task Scheduler.
+
+In Linux, you can write a cronjob or an anacron script.
+There are two environment variables that need to be set during the cron job or anacron script.
+```
+export DISPLAY=:0
+```
+
+The other variable is dependent on your desktop environment
+
+KDE:
+```
+export KDE_FULL_SESSION=true
+```
+
+GNOME or Cinnamon:
+```
+export GNOME_DESKTOP_SESSION_ID=anything
+```
+
+Lubuntu:
+```
+export DESKTOP_SESSION=Lubuntu
+```
+
+mate:
+```
+export DESKTOP_SESSION=mate
+```
+
+[Click here for instructions on configuring cron jobs.](https://help.ubuntu.com/community/CronHowto)
 
 Configuration file
 =======
