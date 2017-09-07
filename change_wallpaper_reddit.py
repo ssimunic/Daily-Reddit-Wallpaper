@@ -109,8 +109,8 @@ def get_top_image(sub_reddit):
             if url.endswith("/new"):
                 url = url.rsplit("/", 1)[0]
             id = url.rsplit("/", 1)[1].rsplit(".", 1)[0]
-            ret["url"] = "http://i.imgur.com/{id}.jpg".format(id=id)
-            ret["type"] = 'jpg'
+            ret["url"] = "http://i.imgur.com/{id}.{imageType}".format(id=id, imageType=imageType)
+            ret["type"] = imageType
             return ret
 
 
