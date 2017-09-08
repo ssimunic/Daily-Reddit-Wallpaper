@@ -27,6 +27,8 @@ def load_config():
     default["time"] = "day"
     default["display"] = "0"
     default["output"] = "Pictures/Wallpapers"
+    default["user"] = None
+    default["multireddit"] = None
 
     config_path = os.path.expanduser("~/.config/change_wallpaper_reddit.rc")
     section_name = "root"
@@ -57,6 +59,8 @@ def load_config():
             add_to_ret(config.getint, "display")
             add_to_ret(config.get, "time")
             add_to_ret(config.get, "output")
+            add_to_ret(config.get, "user")
+            add_to_ret(config.get, "multireddit")
 
             return ret
 
@@ -80,17 +84,20 @@ def parse_args():
                         help="Desktop display number on OS X (0: all displays, 1: main display, etc")
     parser.add_argument("-o", "--output", type=str, default=config["output"],
                         help="Set the outputfolder in the home directory to save the Wallpapers to.")
+    parser.add_argument("-u", "--user", type=str, default=config["user"],
+                        help="Set the reddit username that owns the multireddit to use.")
+    parser.add_argument("-m", "--multireddit", type=str, default=config["multireddit"],
+                        help="Name of multireddit to use.")
 
     args = parser.parse_args()
     return args
 
 
-def get_top_image(sub_reddit):
+def get_top_image(submissions):
     """Get image link of most upvoted wallpaper of the day
     :sub_reddit: name of the sub reddit
     :return: the image link
     """
-    submissions = sub_reddit.new(limit=10) if args.time == "new" else sub_reddit.top(time_filter=args.time, limit=10)
     for submission in submissions:
         
         ret = {"id": submission.id}
@@ -161,15 +168,28 @@ if __name__ == '__main__':
 
     args = parse_args()
     subreddit = args.subreddit
+    multireddit = args.multireddit
+    user = args.user
     save_dir = args.output
 
     supported_linux_desktop_envs = ["gnome", "mate", "kde", "lubuntu"]
 
     # Python Reddit Api Wrapper
-    r = praw.Reddit('dailywallpaper', user_agent="Get top wallpaper from /r/{subreddit} by /u/ssimunic".format(subreddit=subreddit))
+    r = praw.Reddit('dailywallpaper', user_agent="Get top wallpaper by /u/ssimunic")
+
+    # Get top submissions
+    if ((multireddit is not None) and (user is not None)):
+        print("Using {user}'s multireddit {multireddit}".format(user=user, multireddit=multireddit))
+        multi_reddit = r.multireddit(user, multireddit)
+        submissions = multi_reddit.new(limit=10) if args.time == "new" else multi_reddit.top(time_filter=args.time, limit=10)
+        sourceType = multireddit
+    else:
+        sub_reddit = r.subreddit(subreddit)
+        submissions = sub_reddit.new(limit=10) if args.time == "new" else sub_reddit.top(time_filter=args.time, limit=10)
+        sourceType = subreddit
     
     # Get top image link
-    image = get_top_image(r.subreddit(subreddit))
+    image = get_top_image(submissions)
     if "url" not in image:
         sys.exit("Error: No suitable images were found, the program is now" \
                  " exiting.")
@@ -184,7 +204,7 @@ if __name__ == '__main__':
         
         home_dir = os.path.expanduser("~")
         save_location = "{home_dir}/{save_dir}/{subreddit}-{id}.{imageType}".format(home_dir=home_dir, save_dir=save_dir,
-                                                                            subreddit=subreddit,
+                                                                            subreddit=sourceType,
                                                                             id=image["id"],
                                                                             imageType=image["type"])
 
