@@ -52,7 +52,7 @@ If you wanna use other subreddit, include argument with the subreddit name:
 python /home/silvio/Scripts/change_wallpaper_reddit.py --subreddit art
 ```
 
-If you want to use a public multireddit, you must specify the user of the redditor that owns the multireddit and the name of the multireddit.
+If you want to use a public multireddit, you must specify the name of the redditor that owns the multireddit and the name of the multireddit.
 Example:
 ```
 python /home/silvio/Scripts/change_wallpaper_reddit.py --user redditor --multireddit nameOfMultireddit
