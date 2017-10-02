@@ -26,7 +26,7 @@ def load_config():
     default["nsfw"] = "False"
     default["time"] = "day"
     default["display"] = "0"
-    default["output"] = "Pictures/Wallpapers"
+    default["output"] = "~/Pictures/Wallpapers"
 
     config_path = os.path.expanduser("~/.config/change_wallpaper_reddit.rc")
     section_name = "root"
@@ -79,7 +79,7 @@ def parse_args():
     parser.add_argument("-d", "--display", type=int, default=config["display"],
                         help="Desktop display number on OS X (0: all displays, 1: main display, etc")
     parser.add_argument("-o", "--output", type=str, default=config["output"],
-                        help="Set the outputfolder in the home directory to save the Wallpapers to.")
+                        help="Set the directory to save the Wallpapers to.")
 
     args = parser.parse_args()
     return args
@@ -178,14 +178,15 @@ if __name__ == '__main__':
     if response.status_code == requests.codes.ok:
         # Get home directory and location where image will be saved
         # (default location for Ubuntu is used)
-        home_dir = os.path.expanduser("~")
-        save_location = "{home_dir}/{save_dir}/{subreddit}-{id}.jpg".format(home_dir=home_dir, save_dir=save_dir,
+        if '~' in save_dir:
+            home_dir = os.path.expanduser("~")
+            save_dir = save_dir.replace('~', home_dir)
+        save_location = "{save_dir}/{subreddit}-{id}.jpg".format(save_dir=save_dir,
                                                                             subreddit=subreddit,
                                                                             id=image["id"])
 
         if os.path.isfile(save_location):
-            sys.exit("Info: Image already exists, nothing to do, the program is" \
-                  " now exiting")
+            print("Image found. Resetting..")
 
         # Create folders if they don't exist
         dir = os.path.dirname(save_location)
@@ -205,8 +206,14 @@ if __name__ == '__main__':
             desktop_environment = detect_desktop_environment()
             if desktop_environment and desktop_environment["name"] in supported_linux_desktop_envs:
                 os.system(desktop_environment["command"].format(save_location=save_location))
+                # Check for pwal/wal
+            elif (os.path.isfile('/bin/wal')):
+                os.system("wal -i {save_location}".format(save_location=save_location))
+                # Check for feh
+            elif (os.path.isfile('/bin/feh')):
+                os.system("feh --bg-fill {save_location}".format(save_location=save_location))
             else:
-                print("Unsupported desktop environment")
+                print("No suitable programs found.")
 
         # Windows
         if platform_name.startswith("Win"):
