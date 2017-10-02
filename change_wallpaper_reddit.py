@@ -26,7 +26,7 @@ def load_config():
     default["nsfw"] = "False"
     default["time"] = "day"
     default["display"] = "0"
-    default["output"] = "/tmp/Wallpapers"
+    default["output"] = "~/Pictures/Wallpapers"
 
     config_path = os.path.expanduser("~/.config/change_wallpaper_reddit.rc")
     section_name = "root"
@@ -178,6 +178,9 @@ if __name__ == '__main__':
     if response.status_code == requests.codes.ok:
         # Get home directory and location where image will be saved
         # (default location for Ubuntu is used)
+        if '~' in save_dir:
+            home_dir = os.path.expanduser("~")
+            save_dir = save_dir.replace('~', home_dir)
         save_location = "{save_dir}/{subreddit}-{id}.jpg".format(save_dir=save_dir,
                                                                             subreddit=subreddit,
                                                                             id=image["id"])
