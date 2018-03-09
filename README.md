@@ -33,6 +33,15 @@ The rest is the same.
 Using script
 =======
 
+Update praw.ini:
+
+You need to register this app with your reddit account.
+https://www.reddit.com/prefs/apps/
+
+You need to copy your client id and client secret into the praw.ini file.
+The id will be in the upper left corner of your app information (it will be a long alphanumeric string).
+The secret will be labeled "secret".
+
 Simply run:
 ```
 python /home/silvio/Scripts/change_wallpaper_reddit.py
@@ -41,6 +50,12 @@ python /home/silvio/Scripts/change_wallpaper_reddit.py
 If you wanna use other subreddit, include argument with the subreddit name:
 ```
 python /home/silvio/Scripts/change_wallpaper_reddit.py --subreddit art
+```
+
+If you want to use a public multireddit, you must specify the name of the redditor that owns the multireddit and the name of the multireddit.
+Example:
+```
+python /home/silvio/Scripts/change_wallpaper_reddit.py --user redditor --multireddit nameOfMultireddit
 ```
 
 If you don't want to change your wallpaper daily, you can use newest, hourly, weekly, monthly or yearly wallpaper too by adding one of the following arguments: ```new```, ```hour```, ```week```, ```month```, ```year``` to the script.
@@ -101,7 +116,37 @@ or
 Running every minute or hour
 =======
 
-Look into using cronjobs on Linux or Task Scheduler on Windows for performing this.
+You can configure this script to run at timed intervals in Windows using the Task Scheduler.
+
+In Linux, you can write a cronjob or an anacron script.
+There are two environment variables that need to be set during the cron job or anacron script.
+```
+export DISPLAY=:0
+```
+
+The other variable is dependent on your desktop environment
+
+KDE:
+```
+export KDE_FULL_SESSION=true
+```
+
+GNOME or Cinnamon:
+```
+export GNOME_DESKTOP_SESSION_ID=anything
+```
+
+Lubuntu:
+```
+export DESKTOP_SESSION=Lubuntu
+```
+
+mate:
+```
+export DESKTOP_SESSION=mate
+```
+
+[Click here for instructions on configuring cron jobs.](https://help.ubuntu.com/community/CronHowto)
 
 Configuration file
 =======
