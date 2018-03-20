@@ -184,19 +184,16 @@ if __name__ == '__main__':
                                                                             id=image["id"],
                                                                             image_type=image['type'])
 
-        if os.path.isfile(save_location):
-            sys.exit("Info: Image already exists, nothing to do, the program is" \
-                  " now exiting")
+        if not os.path.isfile(save_location):
+            # Create folders if they don't exist
+            dir = os.path.dirname(save_location)
+            if not os.path.exists(dir):
+                os.makedirs(dir)
 
-        # Create folders if they don't exist
-        dir = os.path.dirname(save_location)
-        if not os.path.exists(dir):
-            os.makedirs(dir)
-
-        # Write to disk
-        with open(save_location, "wb") as fo:
-            for chunk in response.iter_content(4096):
-                fo.write(chunk)
+            # Write to disk
+            with open(save_location, "wb") as fo:
+                for chunk in response.iter_content(4096):
+                    fo.write(chunk)
 
         # Check OS and environments
         platform_name = platform.system()
