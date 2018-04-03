@@ -90,8 +90,7 @@ def get_top_image(sub_reddit):
     :sub_reddit: name of the sub reddit
     :return: the image link
     """
-    submissions = sub_reddit.get_new(limit=10) if args.time == "new" else sub_reddit.get_top(params={"t": args.time},
-                                                                                             limit=10)
+    submissions = sub_reddit.new if args.time == "new" else sub_reddit.hot();
     for submission in submissions:
         ret = {"id": submission.id}
         if not args.nsfw and submission.over_18:
@@ -166,7 +165,7 @@ if __name__ == '__main__':
     r = praw.Reddit(user_agent="Get top wallpaper from /r/{subreddit} by /u/ssimunic".format(subreddit=subreddit))
 
     # Get top image link
-    image = get_top_image(r.get_subreddit(subreddit))
+    image = get_top_image(r.subreddit(subreddit))
     if "url" not in image:
         sys.exit("Error: No suitable images were found, the program is now" \
                  " exiting.")
