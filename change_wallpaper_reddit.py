@@ -90,7 +90,8 @@ def get_top_image(sub_reddit):
     :sub_reddit: name of the sub reddit
     :return: the image link
     """
-    submissions = sub_reddit.new if args.time == "new" else sub_reddit.hot();
+    submissions = sub_reddit.new(limit=10) if args.time == "new" else sub_reddit.hot(params={"t": args.time},
+                                                                                     limit=10)
     for submission in submissions:
         ret = {"id": submission.id}
         if not args.nsfw and submission.over_18:
