@@ -143,6 +143,9 @@ def detect_desktop_environment():
     elif os.environ.get("DESKTOP_SESSION") == "mate":
         environment["name"] = "mate"
         environment["command"] = "gsettings set org.mate.background picture-filename {save_location}"
+    elif os.environ.get("DESKTOP_SESSION") == "i3":
+        environment["name"] = "i3"
+        environment["command"] = "feh --bg-scale {save_location}"
     else:
         try:
             info = subprocess.getoutput("xprop -root _DT_SAVE_MODE")
@@ -160,7 +163,7 @@ if __name__ == '__main__':
     subreddit = args.subreddit
     save_dir = args.output
 
-    supported_linux_desktop_envs = ["gnome", "mate", "kde", "lubuntu"]
+    supported_linux_desktop_envs = ["gnome", "mate", "kde", "lubuntu", "i3"]
 
     # Python Reddit Api Wrapper
     r = praw.Reddit(user_agent="Get top wallpaper from /r/{subreddit} by /u/ssimunic".format(subreddit=subreddit))
