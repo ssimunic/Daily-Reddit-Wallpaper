@@ -26,7 +26,7 @@ def load_config():
     default["nsfw"] = "False"
     default["time"] = "day"
     default["display"] = "0"
-    default["output"] = "Pictures/Wallpapers"
+    default["output"] = os.path.join("Pictures", "Wallpapers")
 
     config_path = os.path.expanduser("~/.config/change_wallpaper_reddit.rc")
     section_name = "root"
@@ -178,24 +178,22 @@ if __name__ == '__main__':
     if response.status_code == requests.codes.ok:
         # Get home directory and location where image will be saved
         # (default location for Ubuntu is used)
-        home_dir = os.path.expanduser("~")
-        save_location = "{home_dir}/{save_dir}/{subreddit}-{id}.jpg".format(home_dir=home_dir, save_dir=save_dir,
-                                                                            subreddit=subreddit,
-                                                                            id=image["id"])
+        save_location = os.path.join(os.path.expanduser("~"), save_dir, "{}-{}.jpg".format(subreddit, image["id"]))
 
         if os.path.isfile(save_location):
-            sys.exit("Info: Image already exists, nothing to do, the program is" \
-                  " now exiting")
+            print("Info: Image already exists")
+        else:
+            # Create folders if they don't exist
+            dir = os.path.dirname(save_location)
+            if not os.path.exists(dir):
+                os.makedirs(dir)
 
-        # Create folders if they don't exist
-        dir = os.path.dirname(save_location)
-        if not os.path.exists(dir):
-            os.makedirs(dir)
+            # Write to disk
+            with open(save_location, "wb") as fo:
+                for chunk in response.iter_content(4096):
+                    fo.write(chunk)
 
-        # Write to disk
-        with open(save_location, "wb") as fo:
-            for chunk in response.iter_content(4096):
-                fo.write(chunk)
+        print("Setting wallpaper to {}".format(save_location))
 
         # Check OS and environments
         platform_name = platform.system()
@@ -210,15 +208,23 @@ if __name__ == '__main__':
 
         # Windows
         if platform_name.startswith("Win"):
+            SPI_SETDESKWALLPAPER = 0x0014
+            SPIF_UPDATEINIFILE = 0x01
+            SPIF_SENDCHANGE = 0x02
             # Python 3.x
             if sys.version_info >= (3, 0):
-                ctypes.windll.user32.SystemParametersInfoW(20, 0, save_location, 3)
+                if isinstance(save_location, bytes):
+                    # ANSI string (bytes)
+                    ctypes.windll.user32.SystemParametersInfoA(SPI_SETDESKWALLPAPER, 0, save_location, SPIF_UPDATEINIFILE | SPIF_SENDCHANGE)
+                else:
+                    # Unicode string (str)
+                    ctypes.windll.user32.SystemParametersInfoW(SPI_SETDESKWALLPAPER, 0, save_location, SPIF_UPDATEINIFILE | SPIF_SENDCHANGE)
             # Python 2.x
             else:
                 if isinstance(save_location, str):
-                    ctypes.windll.user32.SystemParametersInfoA(20, 0, save_location, 3)
+                    ctypes.windll.user32.SystemParametersInfoA(SPI_SETDESKWALLPAPER, 0, save_location, SPIF_UPDATEINIFILE | SPIF_SENDCHANGE)
                 else:
-                    ctypes.windll.user32.SystemParametersInfoW(20, 0, save_location, 3)
+                    ctypes.windll.user32.SystemParametersInfoW(SPI_SETDESKWALLPAPER, 0, save_location, SPIF_UPDATEINIFILE | SPIF_SENDCHANGE)
 
         # OS X/macOS
         if platform_name.startswith("Darwin"):
