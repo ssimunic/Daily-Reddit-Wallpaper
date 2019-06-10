@@ -97,6 +97,8 @@ def get_top_image(sub_reddit):
         if not args.nsfw and submission.over_18:
             continue
         url = submission.url
+        if submission.is_self or submission.pinned:
+            continue
         # Strip trailing arguments (after a '?')
         url = re.sub(R"\?.*", "", url)
         ret['type'] = url.split(".")[-1]
