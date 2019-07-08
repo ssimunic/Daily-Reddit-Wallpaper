@@ -32,8 +32,8 @@ The rest is the same.
 
 Using script
 =======
-
-Simply run:
+#### Sice reddit requires OAUTH in their API  requests, you now have to imput your reddit credentials and your app's client id and seceret id. You can create and app here: https://www.reddit.com/prefs/apps/
+##### Then, simply run:
 ```
 python /home/silvio/Scripts/change_wallpaper_reddit.py
 ```
