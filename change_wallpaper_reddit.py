@@ -10,6 +10,7 @@ import re
 import requests
 import sys
 import time
+import json
 from configparser import ConfigParser
 from io import StringIO
 from collections import defaultdict
@@ -63,6 +64,7 @@ def load_config():
     except IOError as e:
         return default
 
+
 config = load_config()
 
 
@@ -107,8 +109,8 @@ def get_top_image(sub_reddit):
         elif ("imgur.com" in url) and ("/a/" not in url) and ("/gallery/" not in url):
             if url.endswith("/new"):
                 url = url.rsplit("/", 1)[0]
-            id = url.rsplit("/", 1)[1].rsplit(".", 1)[0]
-            ret["url"] = "http://i.imgur.com/{id}.jpg".format(id=id)
+            id_toget = url.rsplit("/", 1)[1].rsplit(".", 1)[0]
+            ret["url"] = "http://i.imgur.com/{id}.jpg".format(id=id_toget)
         else:
             continue
 
@@ -169,8 +171,14 @@ if __name__ == '__main__':
 
     supported_linux_desktop_envs = ["gnome", "mate", "kde", "lubuntu", "i3"]
 
+    # Load credentials from credentials.json file
+    with open('./credentials.json') as f:
+        params = json.load(f)
+
     # Python Reddit Api Wrapper
-    r = praw.Reddit(user_agent="Get top wallpaper from /r/{subreddit} by /u/ssimunic".format(subreddit=subreddit))
+    r = praw.Reddit(client_id=params['client_id'],
+                    client_secret=params['api_key'],
+                    user_agent=f"Get top wallpaper from /r/{subreddit} by /u/ssimunic")
 
     # Get top image link
     image = get_top_image(r.subreddit(subreddit))
@@ -186,10 +194,11 @@ if __name__ == '__main__':
         # Get home directory and location where image will be saved
         # (default location for Ubuntu is used)
         home_dir = os.path.expanduser("~")
-        save_location = "{home_dir}/{save_dir}/{subreddit}-{id}.{image_type}".format(home_dir=home_dir, save_dir=save_dir,
-                                                                            subreddit=subreddit,
-                                                                            id=image["id"],
-                                                                            image_type=image['type'])
+        save_location = "{home_dir}/{save_dir}/{subreddit}-{id}.{image_type}".format(home_dir=home_dir,
+                                                                                     save_dir=save_dir,
+                                                                                     subreddit=subreddit,
+                                                                                     id=image["id"],
+                                                                                     image_type=image['type'])
 
         if not os.path.isfile(save_location):
             # Create folders if they don't exist
