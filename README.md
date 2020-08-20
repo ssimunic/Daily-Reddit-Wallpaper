@@ -34,6 +34,7 @@ Using script
 =======
 First, you'll need to configure the _credentials.json_ file with your personal Reddit API.
 Your api_key will be the Reddit API secret and your client_id the first and smaller code:
+
 ![Reddit API](https://camo.githubusercontent.com/d53f92cd85d1279a239444acee25179e8e6d8bb5/687474703a2f2f692e696d6775722e636f6d2f65326b4f5231612e706e67)
 
 Then, simply run:
