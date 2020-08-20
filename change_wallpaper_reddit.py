@@ -1,19 +1,20 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 from __future__ import unicode_literals
+
 import argparse
 import ctypes
+import json
 import os
-import praw
 import platform
 import re
-import requests
 import sys
-import time
-import json
+from collections import defaultdict
 from configparser import ConfigParser
 from io import StringIO
-from collections import defaultdict
+
+import praw
+import requests
 
 if sys.version_info <= (2, 6):
     import commands as subprocess
