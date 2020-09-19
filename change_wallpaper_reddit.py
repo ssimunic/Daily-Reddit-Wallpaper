@@ -24,7 +24,7 @@ else:
 
 def load_config():
     default = defaultdict(str)
-    default["subreddit"] = "wallpapers"
+    default["subreddit"] = "wallpaper"
     default["nsfw"] = "False"
     default["time"] = "day"
     default["display"] = "0"
@@ -33,14 +33,14 @@ def load_config():
     config_path = os.path.expanduser("~/.config/change_wallpaper_reddit.rc")
     section_name = "root"
     try:
-        config = ConfigParser(default)
+        conf = ConfigParser(default)
         with open(config_path, "r") as stream:
             stream = StringIO("[{section_name}]\n{stream_read}".format(section_name=section_name,
                                                                        stream_read=stream.read()))
             if sys.version_info >= (3, 0):
-                config.read_file(stream)
+                conf.read_file(stream)
             else:
-                config.readfp(stream)
+                conf.read_file(stream)
 
             ret = {}
 
@@ -48,17 +48,17 @@ def load_config():
             def add_to_ret(fun, name):
                 try:
                     ret[name] = fun(section_name, name)
-                except ValueError as e:
+                except ValueError as e_code:
                     err_str = "Error in config file.  Variable '{}': {}. The default '{}' will be used."
 
-                    # print sys.stderr >> err_str.format(name, str(e), default[name])
+                    # print sys.stderr >> err_str.format(name, str(e_code), default[name])
                     ret[name] = default[name]
 
-            add_to_ret(config.get, "subreddit")
-            add_to_ret(config.getboolean, "nsfw")
-            add_to_ret(config.getint, "display")
-            add_to_ret(config.get, "time")
-            add_to_ret(config.get, "output")
+            add_to_ret(conf.get, "subreddit")
+            add_to_ret(conf.getboolean, "nsfw")
+            add_to_ret(conf.getint, "display")
+            add_to_ret(conf.get, "time")
+            add_to_ret(conf.get, "output")
 
             return ret
 
@@ -71,7 +71,7 @@ config = load_config()
 
 def parse_args():
     """parse args with argparse
-    :returns: args
+    :returns: arguments
     """
     parser = argparse.ArgumentParser(description="Daily Reddit Wallpaper")
     parser.add_argument("-s", "--subreddit", type=str, default=config["subreddit"],
@@ -84,8 +84,8 @@ def parse_args():
     parser.add_argument("-o", "--output", type=str, default=config["output"],
                         help="Set the outputfolder in the home directory to save the Wallpapers to.")
 
-    args = parser.parse_args()
-    return args
+    arguments = parser.parse_args()
+    return arguments
 
 
 def get_top_image(sub_reddit):
@@ -179,13 +179,12 @@ if __name__ == '__main__':
     # Python Reddit Api Wrapper
     r = praw.Reddit(client_id=params['client_id'],
                     client_secret=params['api_key'],
-                    user_agent=f"Get top wallpaper from /r/{subreddit} by /u/ssimunic")
+                    user_agent=f"Get top wallpaper from /r/{subreddit}")
 
     # Get top image link
     image = get_top_image(r.subreddit(subreddit))
     if "url" not in image:
-        sys.exit("Error: No suitable images were found, the program is now" \
-                 " exiting.")
+        sys.exit("Error: No suitable images were found, the program is now exiting.")
 
     # Request image
     response = requests.get(image["url"], allow_redirects=False)
@@ -203,9 +202,9 @@ if __name__ == '__main__':
 
         if not os.path.isfile(save_location):
             # Create folders if they don't exist
-            dir = os.path.dirname(save_location)
-            if not os.path.exists(dir):
-                os.makedirs(dir)
+            directory = os.path.dirname(save_location)
+            if not os.path.exists(directory):
+                os.makedirs(directory)
 
             # Write to disk
             with open(save_location, "wb") as fo:
