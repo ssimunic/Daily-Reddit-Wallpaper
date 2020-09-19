@@ -1,5 +1,5 @@
 # Daily Reddit Wallpaper
-[![Build Status](https://travis-ci.org/ssimunic/Daily-Reddit-Wallpaper.svg?branch=master)](https://travis-ci.org/ssimunic/Daily-Reddit-Wallpaper)
+[![Build Status](https://travis-ci.org/federicotorrielli/Daily-Reddit-Wallpaper.svg?branch=master)](https://travis-ci.org/ssimunic/Daily-Reddit-Wallpaper)
 
 This script changes your wallpaper to most upvoted image of the day on [/r/wallpaper](https://www.reddit.com/r/wallpaper/) or from any other subreddit.
 
