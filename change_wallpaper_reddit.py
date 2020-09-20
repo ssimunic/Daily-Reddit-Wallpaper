@@ -173,7 +173,7 @@ if __name__ == '__main__':
     supported_linux_desktop_envs = ["gnome", "mate", "kde", "lubuntu", "i3"]
 
     # Load credentials from credentials.json file
-    with open('./credentials.json') as f:
+    with open(os.path.dirname(os.path.realpath(sys.argv[0])) + '/credentials.json') as f:
         params = json.load(f)
 
     # Python Reddit Api Wrapper
