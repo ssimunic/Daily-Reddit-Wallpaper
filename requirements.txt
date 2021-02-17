@@ -4,3 +4,4 @@ praw==7.1.0
 requests==2.24.0
 six==1.15.0
 update-checker==0.18.0
+nose2==0.10.0
