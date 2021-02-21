@@ -29,6 +29,7 @@ def load_config():
     default["time"] = "day"
     default["display"] = "0"
     default["output"] = "Pictures/Wallpapers"
+    default["sort"] = "hot"
 
     config_path = os.path.expanduser("~/.config/change_wallpaper_reddit.rc")
     section_name = "root"
@@ -59,6 +60,7 @@ def load_config():
             add_to_ret(conf.getint, "display")
             add_to_ret(conf.get, "time")
             add_to_ret(conf.get, "output")
+            add_to_ret(conf.get, "sort")
 
             return ret
 
@@ -77,12 +79,14 @@ def parse_args():
     parser.add_argument("-s", "--subreddit", type=str, default=config["subreddit"],
                         help="Example: art, getmotivated, wallpapers, ...")
     parser.add_argument("-t", "--time", type=str, default=config["time"],
-                        help="Example: new, hour, day, week, month, year")
+                        help="Example: hour, day, week, month, year")
     parser.add_argument("-n", "--nsfw", action='store_true', default=config["nsfw"], help="Enables NSFW tagged posts.")
     parser.add_argument("-d", "--display", type=int, default=config["display"],
                         help="Desktop display number on OS X (0: all displays, 1: main display, etc")
     parser.add_argument("-o", "--output", type=str, default=config["output"],
                         help="Set the outputfolder in the home directory to save the Wallpapers to.")
+    parser.add_argument("--sort", type=str, default=config["sort"],
+                        help="Can be one of: hot, top, new.")
 
     arguments = parser.parse_args()
     return arguments
@@ -93,8 +97,13 @@ def get_top_image(sub_reddit):
     :sub_reddit: name of the sub reddit
     :return: the image link
     """
-    submissions = sub_reddit.new(limit=10) if args.time == "new" else sub_reddit.hot(params={"t": args.time},
-                                                                                     limit=10)
+    if args.sort == "top":
+        submissions = sub_reddit.top(args.time)
+    elif args.sort == "new":
+        submissions = sub_reddit.new(params={"t": args.time}, limit=10)
+    else:
+        submissions = sub_reddit.hot(params={"t": args.time}, limit=10)
+
     for submission in submissions:
         ret = {"id": submission.id}
         if not args.nsfw and submission.over_18:

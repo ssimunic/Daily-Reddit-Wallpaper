@@ -62,11 +62,18 @@ If you wanna use other subreddit, include argument with the subreddit name:
 python change_wallpaper_reddit.py --subreddit art
 ```
 
-If you don't want to change your wallpaper daily, you can use newest, hourly, weekly, monthly or yearly wallpaper too by adding one of the following arguments: ```new```, ```hour```, ```week```, ```month```, ```year``` to the script.
+If you don't want to change your wallpaper daily, you can use hourly, weekly, monthly or yearly wallpaper too by adding one of the following arguments: ```hour```, ```week```, ```month```, ```year``` to the script.
 
 Example:
 ```
 python change_wallpaper_reddit.py --time week
+```
+
+If you want to choose which wallpaper appears, you can sort posts by adding the arguments: ```hot```, ```top```, ```new``` to the script.
+
+Example:
+```
+python change_wallpaper_reddit.py --sort top
 ```
 
 NSFW images are disabled by default, to enable them add ```--nsfw```.
@@ -132,4 +139,5 @@ Example of configuration file:
 ```
 subreddit=art
 time=day
+sort=top
 ```
