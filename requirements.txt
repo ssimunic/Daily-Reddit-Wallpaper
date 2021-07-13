@@ -1,6 +1,6 @@
 decorator==4.4.2
 future==0.18.2
-praw==7.1.0
+praw==7.3.0
 requests==2.24.0
 six==1.15.0
 update-checker==0.18.0
