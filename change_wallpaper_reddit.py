@@ -107,13 +107,13 @@ def get_top_image(sub_reddit):
     :return: the image link
     """
     if args.sort == "top":
-        submissions = sub_reddit.top(params={"t": args.time}, limit=int(args.limit))
+        submissions = sub_reddit.top(time_filter = args.time, limit=int(args.limit))
     elif args.sort == "new":
-        submissions = sub_reddit.new(params={"t": args.time}, limit=int(args.limit))
+        submissions = sub_reddit.new(time_filter = args.time, limit=int(args.limit))
     else:
-        submissions = sub_reddit.hot(params={"t": args.time}, limit=int(args.limit))
+        submissions = sub_reddit.hot(time_filter = args.time, limit=int(args.limit))
 
-    if args.random:
+    if args.random == True:
         submissions= sorted(submissions, key=lambda k: random.random())
     else:
         submissions = submissions
