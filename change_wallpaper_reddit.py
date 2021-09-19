@@ -110,7 +110,7 @@ def get_top_image(sub_reddit):
     if args.sort == "top":
         submissions = sub_reddit.top(time_filter = args.time, limit=int(args.limit))
     elif args.sort == "new":
-        submissions = sub_reddit.new(time_filter = args.time, limit=int(args.limit))
+        submissions = sub_reddit.new(limit=int(args.limit))
     else:
         submissions = sub_reddit.hot(limit=int(args.limit))
 
