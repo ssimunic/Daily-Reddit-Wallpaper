@@ -27,14 +27,15 @@ def load_config():
     default = defaultdict(str)
     default["subreddit"] = "wallpaper"
     default["nsfw"] = False
-    default["time"] = "day"
+    default["time"] = "all"
     default["display"] = "0"
     default["output"] = "Pictures/Wallpapers"
     default["sort"] = "hot"
     default["limit"] = 20
     default["random"] = False
 
-    config_path = os.path.expanduser("~/.config/change_wallpaper_reddit.rc")
+    # config_path = os.path.expanduser("~/.config/change_wallpaper_reddit.rc")
+    config_path = os.path.dirname(os.path.realpath(sys.argv[0])) + '\\change_wallpaper_reddit.rc'
     section_name = "root"
     try:
         conf = ConfigParser(default)
@@ -65,7 +66,7 @@ def load_config():
             add_to_ret(conf.get, "output")
             add_to_ret(conf.get, "sort")
             add_to_ret(conf.get, "limit")
-            add_to_ret(conf.get, "random")
+            add_to_ret(conf.getboolean, "random")
 
             return ret
 
@@ -107,27 +108,30 @@ def get_top_image(sub_reddit):
     :return: the image link
     """
     if args.sort == "top":
-        submissions = sub_reddit.top(params={"t": args.time}, limit=int(args.limit))
+        submissions = sub_reddit.top(time_filter = args.time, limit=int(args.limit))
     elif args.sort == "new":
-        submissions = sub_reddit.new(params={"t": args.time}, limit=int(args.limit))
+        submissions = sub_reddit.new(limit=int(args.limit))
     else:
-        submissions = sub_reddit.hot(params={"t": args.time}, limit=int(args.limit))
+        submissions = sub_reddit.hot(limit=int(args.limit))
 
-    if args.random:
+    if args.random == True:
         submissions= sorted(submissions, key=lambda k: random.random())
     else:
         submissions = submissions
 
     for submission in submissions:
         ret = {"id": submission.id}
+        ret["subreddit"] = submission.subreddit.display_name
+        print(ret["subreddit"])
         if not args.nsfw and submission.over_18:
             continue
         url = submission.url
+        print(f'url : {url}')
         # Strip trailing arguments (after a '?')
         url = re.sub(R"\?.*", "", url)
         ret['type'] = url.split(".")[-1]
 
-        if url.endswith(".jpg") or url.endswith(".png"):
+        if url.endswith(".jpg") or url.endswith(".png") or url.endswith(".jpeg"):
             ret["url"] = url
         # Imgur support
         elif ("imgur.com" in url) and ("/a/" not in url) and ("/gallery/" not in url):
@@ -214,7 +218,6 @@ if __name__ == '__main__':
 
     # Request image
     response = requests.get(image["url"], allow_redirects=False)
-
     # If image is available, proceed to save
     if response.status_code == requests.codes.ok:
         # Get home directory and location where image will be saved
@@ -222,7 +225,7 @@ if __name__ == '__main__':
         home_dir = os.path.expanduser("~")
         save_location = "{home_dir}/{save_dir}/{subreddit}-{id}.{image_type}".format(home_dir=home_dir,
                                                                                      save_dir=save_dir,
-                                                                                     subreddit=subreddit,
+                                                                                     subreddit=image.get("subreddit",'some_wallpaper'),
                                                                                      id=image["id"],
                                                                                      image_type=image['type'])
 
