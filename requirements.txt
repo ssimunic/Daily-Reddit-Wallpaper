@@ -1,7 +1,7 @@
-decorator==4.4.2
+decorator==5.1.0
 future==0.18.2
-praw==7.4.0
-requests==2.24.0
-six==1.15.0
+praw==7.5.0
+requests==2.26.0
+six==1.16.0
 update-checker==0.18.0
 nose2==0.10.0
