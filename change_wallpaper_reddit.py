@@ -9,6 +9,7 @@ import os
 import platform
 import re
 import sys
+import random
 from collections import defaultdict
 from configparser import ConfigParser
 from io import StringIO
@@ -25,12 +26,16 @@ else:
 def load_config():
     default = defaultdict(str)
     default["subreddit"] = "wallpaper"
-    default["nsfw"] = "False"
-    default["time"] = "day"
+    default["nsfw"] = False
+    default["time"] = "all"
     default["display"] = "0"
     default["output"] = "Pictures/Wallpapers"
+    default["sort"] = "hot"
+    default["limit"] = 20
+    default["random"] = False
 
-    config_path = os.path.expanduser("~/.config/change_wallpaper_reddit.rc")
+    # config_path = os.path.expanduser("~/.config/change_wallpaper_reddit.rc")
+    config_path = os.path.dirname(os.path.realpath(sys.argv[0])) + '\\change_wallpaper_reddit.rc'
     section_name = "root"
     try:
         conf = ConfigParser(default)
@@ -59,6 +64,9 @@ def load_config():
             add_to_ret(conf.getint, "display")
             add_to_ret(conf.get, "time")
             add_to_ret(conf.get, "output")
+            add_to_ret(conf.get, "sort")
+            add_to_ret(conf.get, "limit")
+            add_to_ret(conf.getboolean, "random")
 
             return ret
 
@@ -77,12 +85,18 @@ def parse_args():
     parser.add_argument("-s", "--subreddit", type=str, default=config["subreddit"],
                         help="Example: art, getmotivated, wallpapers, ...")
     parser.add_argument("-t", "--time", type=str, default=config["time"],
-                        help="Example: new, hour, day, week, month, year")
+                        help="Example: hour, day, week, month, year")
     parser.add_argument("-n", "--nsfw", action='store_true', default=config["nsfw"], help="Enables NSFW tagged posts.")
     parser.add_argument("-d", "--display", type=int, default=config["display"],
                         help="Desktop display number on OS X (0: all displays, 1: main display, etc")
     parser.add_argument("-o", "--output", type=str, default=config["output"],
                         help="Set the outputfolder in the home directory to save the Wallpapers to.")
+    parser.add_argument("--sort", type=str, default=config["sort"],
+                        help="Can be one of: hot, top, new.")
+    parser.add_argument("-l","--limit", type=str, default=config["limit"],
+                        help="Set a limit to pull posts")
+    parser.add_argument("-r","--random", action='store_true', default=config["random"],
+                        help="Randomize witin sort")
 
     arguments = parser.parse_args()
     return arguments
@@ -93,18 +107,31 @@ def get_top_image(sub_reddit):
     :sub_reddit: name of the sub reddit
     :return: the image link
     """
-    submissions = sub_reddit.new(limit=10) if args.time == "new" else sub_reddit.hot(params={"t": args.time},
-                                                                                     limit=10)
+    if args.sort == "top":
+        submissions = sub_reddit.top(time_filter = args.time, limit=int(args.limit))
+    elif args.sort == "new":
+        submissions = sub_reddit.new(limit=int(args.limit))
+    else:
+        submissions = sub_reddit.hot(limit=int(args.limit))
+
+    if args.random == True:
+        submissions= sorted(submissions, key=lambda k: random.random())
+    else:
+        submissions = submissions
+
     for submission in submissions:
         ret = {"id": submission.id}
+        ret["subreddit"] = submission.subreddit.display_name
+        print(ret["subreddit"])
         if not args.nsfw and submission.over_18:
             continue
         url = submission.url
+        print(f'url : {url}')
         # Strip trailing arguments (after a '?')
         url = re.sub(R"\?.*", "", url)
         ret['type'] = url.split(".")[-1]
 
-        if url.endswith(".jpg") or url.endswith(".png"):
+        if url.endswith(".jpg") or url.endswith(".png") or url.endswith(".jpeg"):
             ret["url"] = url
         # Imgur support
         elif ("imgur.com" in url) and ("/a/" not in url) and ("/gallery/" not in url):
@@ -183,12 +210,14 @@ if __name__ == '__main__':
 
     # Get top image link
     image = get_top_image(r.subreddit(subreddit))
-    if "url" not in image:
+    try:
+        if "url" not in image:
+            sys.exit("Error: No suitable images were found, the program is now exiting.")
+    except TypeError:
         sys.exit("Error: No suitable images were found, the program is now exiting.")
 
     # Request image
     response = requests.get(image["url"], allow_redirects=False)
-
     # If image is available, proceed to save
     if response.status_code == requests.codes.ok:
         # Get home directory and location where image will be saved
@@ -196,7 +225,7 @@ if __name__ == '__main__':
         home_dir = os.path.expanduser("~")
         save_location = "{home_dir}/{save_dir}/{subreddit}-{id}.{image_type}".format(home_dir=home_dir,
                                                                                      save_dir=save_dir,
-                                                                                     subreddit=subreddit,
+                                                                                     subreddit=image.get("subreddit",'some_wallpaper'),
                                                                                      id=image["id"],
                                                                                      image_type=image['type'])
 
